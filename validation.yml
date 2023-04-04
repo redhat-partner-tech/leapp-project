@@ -1,0 +1,20 @@
+---
+- name: Validation
+  hosts: all
+  strategy: free
+  gather_facts: true
+  become: true
+  force_handlers: true
+  tasks:
+    - name: Initialize lock and logging
+      ansible.builtin.import_role:
+        name: infra.leapp.logging
+      vars:
+        job_name: 'RIPU postupgrade validation'
+
+    - name: Perform postupgrade validation
+      block:
+        - name: Post Leapp validation
+          ansible.builtin.import_role:
+            name: infra.leapp.validation
+...
