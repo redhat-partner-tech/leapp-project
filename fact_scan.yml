@@ -1,6 +1,6 @@
 ---
 - name: Scan host for facts
-  hosts: "{{ _hosts  | default(omit) }}"
+  hosts: "{{ _hosts | default(omit) }}"
   become: true
 
   tasks:
