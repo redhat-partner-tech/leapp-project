@@ -1,0 +1,53 @@
+---
+- name: Rectify inhibitors for RHEL7 EC2 Marketplace instances
+  hosts: all
+  gather_facts: true
+  become: true
+  strategy: free
+  tasks:
+    - name: Wait for connection...
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
+        timeout: 300
+
+    - name: Remove kernel modules
+      ansible.builtin.shell: |
+        set -o pipefail
+        rmmod "{{ item }}"
+      args:
+        executable: /bin/bash
+      register: rmmod_out
+      changed_when: rmmod_out.rc != 0
+      loop:
+        - floppy
+        - pata_acpi
+
+    - name: Remove pam_pkcs11 module
+      ansible.builtin.shell: |
+        set -o pipefail
+        leapp answer --section remove_pam_pkcs11_module_check.confirm=True
+      args:
+        executable: /bin/bash
+      register: rm_pam_pkcs11_out
+      changed_when: rm_pam_pkcs11_out.rc != 0
+
+    - name: Configure sshd
+      ansible.builtin.lineinfile:
+        path: "/etc/ssh/sshd_config"
+        regex: "^(#)?{{ item.key }}"
+        line: "{{ item.key }} {{ item.value }}"
+        state: present
+      loop:
+        - {key: "PermitRootLogin", value: "prohibit-password"}
+        - {key: "PasswordAuthentication", value: "no"}
+      notify:
+        - Restart sshd
+
+  handlers:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+...
