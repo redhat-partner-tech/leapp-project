@@ -1,0 +1,37 @@
+---
+- name: Apply all available package updates
+  hosts: all
+  gather_facts: true
+  become: true
+  strategy: free
+  tasks:
+    - name: Wait for connection...
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
+        timeout: 300
+
+    - name: Upgrade RHEL 7 OS to latest packages available
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+      when: ansible_distribution_major_version | int == 7
+
+    - name: Upgrade RHEL 8/9 OS to latest packages available
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+      when: ansible_distribution_major_version | int >= 8
+
+    - name: Reboot node
+      ansible.builtin.reboot:
+      register: reboot_result
+
+    - name: Wait for connection...
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
+        timeout: 300
+...
