@@ -1,0 +1,15 @@
+---
+collections:
+- name: ansible.posix
+  version: ">=1.5.1" # Version range identifiers (default: ``*``)
+  source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
+- name: fedora.linux_system_roles
+  version: ">=1.21.0" # Version range identifiers (default: ``*``)
+  source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
+- name: community.general
+  version: ">=6.4.0" # Version range identifiers (default: ``*``)
+  source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
+- name: https://github.com/heatmiser/ansible-leapp.git
+  type: git
+  version: project-dev
+...
