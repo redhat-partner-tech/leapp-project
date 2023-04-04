@@ -1,0 +1,23 @@
+---
+- name: Get instance details
+  hosts: all
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: "Get instance details"
+      ansible.builtin.include_role:
+        name: snapshot
+        tasks_from: aws/get_instance_details
+
+    - name: Debug output - instances_details
+      ansible.builtin.debug:
+        msg: "{{ instances_details }}"
+
+    - name: Debug output - instances_details - map(attribute='instance_id')
+      ansible.builtin.debug:
+        msg: "{{ instances_details.instances | map(attribute='instance_id') | list | unique }}"
+
+    - name: Debug output - instances_details - map(attribute='private_ip_address')
+      ansible.builtin.debug:
+        msg: "{{ instances_details.instances | map(attribute='private_ip_address') | list | unique }}"
+...
