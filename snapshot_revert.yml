@@ -1,0 +1,12 @@
+---
+- name: Revert snapshot of instance
+  hosts: all
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Revert instance to snapshot in region "{{ ec2_region }}"
+      ansible.builtin.include_role:
+        name: infra.leapp.snapshot
+      vars:
+        ec2_instance_action: "snapshot_revert"
+...
