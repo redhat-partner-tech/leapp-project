@@ -6,7 +6,7 @@
   tasks:
     - name: "Get instance details"
       ansible.builtin.include_role:
-        name: snapshot
+        name: infra.leapp.snapshot
         tasks_from: aws/get_instance_details
 
     - name: Debug output - instances_details
