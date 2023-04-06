@@ -4,9 +4,6 @@
   connection: local
   gather_facts: false
   tasks:
-    - name: Take snapshot of instances in region "{{ ec2_region }}"
-      ansible.builtin.include_role:
-        name: infra.leapp.snapshot
-      vars:
-        ec2_instance_action: "snapshot_create"
+    - name: Call snapshot retry tasks include
+      ansible.builtin.include_tasks: snapshot_instance_retry_include.yml
 ...

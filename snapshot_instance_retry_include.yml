@@ -1,0 +1,29 @@
+---
+- name: Snapshot retry include block
+  block:
+    - name: Increment retry count
+      ansible.builtin.set_fact:
+        retry_count: "{{ 0 if retry_count is undefined else retry_count | int + 1 }}"
+    # - name: Resume or reset for failed tasks after each failed attempt
+    #   ansible.builtin.include_tasks: some_other_task_resume_or_reset.yml
+    #   when: retry_count | int != 0
+    - name: Take snapshot of instances in region "{{ ec2_region }}"
+      ansible.builtin.include_role:
+        name: infra.leapp.snapshot
+      vars:
+        ec2_instance_action: "snapshot_create"
+
+  rescue:
+    - name: Maximum retries fail task via when
+      ansible.builtin.fail:
+        msg: Maximum retries of grouped tasks reached
+      # initial try plus 4 retries = 5 total tries
+      when: retry_count | int == 4
+
+    - name: Instrument retry count
+      ansible.builtin.debug:
+        msg: "Snapshot Task Group failed, retry count: {{ retry_count }}"
+
+    - name: Loop back on snapshot retry include
+      ansible.builtin.include_tasks: snapshot_instance_retry_include.yml
+...
