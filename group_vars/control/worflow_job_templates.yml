@@ -21,12 +21,14 @@ controller_workflows:
         unified_job_template: Snapshot Instance
         organization: Default
         all_parents_must_converge: false
-        success_nodes: OS Update
+        success_nodes:
+          - OS Update
       - identifier: OS Update
         unified_job_template: OS Update
         organization: Default
         all_parents_must_converge: false
-        success_nodes: Leapp Analysis
+        success_nodes:
+          - Leapp Analysis
       - identifier: Leapp Analysis
         unified_job_template: Leapp Analysis
         organization: Default
