@@ -18,21 +18,18 @@ controller_workflows:
           required: false
     simplified_workflow_nodes:
       - identifier: Snapshot Instance
-        all_parents_must_converge: false
         unified_job_template: Snapshot Instance
-        success_nodes: OS Update
         organization: Default
+        all_parents_must_converge: false
+        success_nodes: OS Update
       - identifier: OS Update
         unified_job_template: OS Update
-        success_nodes: Update inventories via dynamic sources
         organization: Default
-      - identifier: Update inventories via dynamic sources
         all_parents_must_converge: false
-        unified_job_template: Update inventories via dynamic sources
         success_nodes: Leapp Analysis
-        organization: Default
       - identifier: Leapp Analysis
-        all_parents_must_converge: false
         unified_job_template: Leapp Analysis
         organization: Default
+        all_parents_must_converge: false
+        success_nodes: []
 ...
