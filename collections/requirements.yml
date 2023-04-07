@@ -9,6 +9,9 @@ collections:
 - name: community.general
   version: ">=6.4.0" # Version range identifiers (default: ``*``)
   source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
+- name: infra.controller_configuration
+  version: ">=2.3.0" # Version range identifiers (default: ``*``)
+  source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
 - name: https://github.com/heatmiser/ansible-leapp.git
   type: git
   version: project-dev
