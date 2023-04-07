@@ -1,0 +1,38 @@
+---
+controller_workflows:
+  - name: WORKFLOW / Leapp Analysis
+    description: Workflow for Leapp Analysis
+    # extra_vars:
+    #   var_name: value
+    inventory: Workshop Inventory
+    state: present
+    organization: Default
+    survey_enabled: true
+    survey_spec:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Server Name or Pattern
+          type: text
+          variable: PREFIX
+          required: false
+    simplified_workflow_nodes:
+      - identifier: Snapshot Instance
+        all_parents_must_converge: false
+        unified_job_template: Snapshot Instance
+        success_nodes: OS Update
+        organization: Default
+      - identifier: OS Update
+        unified_job_template: OS Update
+        success_nodes: Update inventories via dynamic sources
+        organization: Default
+      - identifier: Update inventories via dynamic sources
+        all_parents_must_converge: false
+        unified_job_template: Update inventories via dynamic sources
+        success_nodes: Leapp Analysis
+        organization: Default
+      - identifier: Leapp Analysis
+        all_parents_must_converge: false
+        unified_job_template: Leapp Analysis
+        organization: Default
+...
