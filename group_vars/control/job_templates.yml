@@ -66,8 +66,8 @@ controller_templates:
       ec2_region: "{{ workshop_ec2_region }}"
       instances:
         tags:
-          guid: "{{ ec2_name_prefix }}"
-          Student: student1
+          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
+          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
   - name: Snapshot Instance / Revert
     project: Project Leapp
@@ -81,13 +81,13 @@ controller_templates:
       ec2_region: "{{ workshop_ec2_region }}"
       instances:
         tags:
-          guid: "{{ ec2_name_prefix }}"
-          Student: "{{ student }}"
+          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
+          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
       snapshots:
         tags:
-          Workshop: "{{ ec2_name_prefix }}"
-          Student: "{{ student }}"
+          Workshop: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
+          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           Environment: leapp
   - name: Instance Details
     project: Project Leapp
@@ -100,8 +100,8 @@ controller_templates:
       ec2_region: "{{ workshop_ec2_region }}"
       instances:
         tags:
-          guid: "{{ ec2_name_prefix }}"
-          Student: "{{ student }}"
+          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
+          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
   - name: Update inventories via dynamic sources
     project: Project Leapp
