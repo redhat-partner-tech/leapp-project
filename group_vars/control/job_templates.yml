@@ -1,0 +1,125 @@
+---
+controller_templates:
+  - name: Fact Scan
+    project: Project Leapp
+    playbook: fact_scan.yml
+    inventory: Workshop Inventory
+    limit: web
+    use_fact_cache: true
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      _hosts: all
+  - name: OS Update
+    project: Project Leapp
+    playbook: pkgs_full_update.yml
+    inventory: Workshop Inventory
+    limit: web
+    credentials:
+      - Workshop Credential
+  - name: Leapp Analysis
+    project: Project Leapp
+    playbook: analysis.yml
+    inventory: Workshop Inventory
+    limit: web
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      leapp_upgrade_type: connected
+      leapp_metadata_url: https://host.location/leapp-data-21.tar.gz
+      leapp_repos_enabled: []
+    ask_variables_on_launch: true
+  - name: Leapp Upgrade
+    project: Project Leapp
+    playbook: upgrade.yml
+    inventory: Workshop Inventory
+    limit: web
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      leapp_upgrade_type: connected
+      leapp_repos_enabled: []
+    ask_variables_on_launch: true
+  - name: Leapp Analysis
+    project: Project Leapp
+    playbook: analysis.yml
+    inventory: Workshop Inventory
+    limit: web
+    credentials:
+      - Workshop Credential
+  - name: Rectify RHEL7
+    project: Project Leapp
+    playbook: rectify_rhel7.yml
+    inventory: Workshop Inventory
+    limit: rhel7
+    credentials:
+      - Workshop Credential
+  - name: Snapshot Instance
+    project: Project Leapp
+    playbook: snapshot_instance.yml
+    inventory: Workshop Inventory
+    limit: ansible-1
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      snapshot: aws
+      ec2_region: "{{ ec2_region }}"
+      instances:
+        tags:
+          guid: "{{ ec2_name_prefix }}"
+          Student: student1
+          operating_system: rhel
+  - name: Snapshot Instance / Revert
+    project: Project Leapp
+    playbook: snapshot_revert.yml
+    inventory: Workshop Inventory
+    limit: ansible-1
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      snapshot: aws
+      ec2_region: "{{ ec2_region }}"
+      instances:
+        tags:
+          guid: "{{ ec2_name_prefix }}"
+          Student: "{{ student }}"
+          operating_system: rhel
+      snapshots:
+        tags:
+          Workshop: "{{ ec2_name_prefix }}"
+          Student: "{{ student }}"
+          Environment: leapp
+  - name: Instance Details
+    project: Project Leapp
+    playbook: instance_details.yml
+    inventory: Workshop Inventory
+    limit: ansible-1
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      ec2_region: "{{ ec2_region }}"
+      instances:
+        tags:
+          guid: "{{ ec2_name_prefix }}"
+          Student: "{{ student }}"
+          operating_system: rhel
+  - name: Update inventories via dynamic sources
+    project: Project Leapp
+    playbook: inventory_source_update.yml
+    inventory: Workshop Inventory
+    credentials:
+      - Controller Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory to update
+          type: multiplechoice
+          variable: rhel_inventory_name
+          choices:
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
+...
