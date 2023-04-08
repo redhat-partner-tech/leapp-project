@@ -1,6 +1,6 @@
 ---
 controller_workflows:
-  - name: WORKFLOW / Leapp Analysis
+  - name: LEAPP / WORKFLOW / Analysis
     description: Workflow for Leapp Analysis
     # extra_vars:
     #   var_name: value
@@ -17,20 +17,20 @@ controller_workflows:
           variable: PREFIX
           required: false
     simplified_workflow_nodes:
-      - identifier: Snapshot Instance
-        unified_job_template: Snapshot Instance
+      - identifier: LEAPP / Snapshot Instance
+        unified_job_template: LEAPP / Snapshot Instance
         organization: Default
         all_parents_must_converge: false
         success_nodes:
-          - OS Update
-      - identifier: OS Update
-        unified_job_template: OS Update
+          - LEAPP / OS Update
+      - identifier: LEAPP / OS Update
+        unified_job_template: LEAPP / OS Update
         organization: Default
         all_parents_must_converge: false
         success_nodes:
-          - Leapp Analysis
-      - identifier: Leapp Analysis
-        unified_job_template: Leapp Analysis
+          - LEAPP / Analysis
+      - identifier: LEAPP / Analysis
+        unified_job_template: LEAPP / Analysis
         organization: Default
         all_parents_must_converge: false
         success_nodes: []

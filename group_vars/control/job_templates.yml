@@ -1,6 +1,6 @@
 ---
 controller_templates:
-  - name: Fact Scan
+  - name: UTILITY / Fact Scan
     project: Project Leapp
     playbook: fact_scan.yml
     inventory: Workshop Inventory
@@ -10,14 +10,14 @@ controller_templates:
       - Workshop Credential
     extra_vars:
       _hosts: all
-  - name: OS Update
+  - name: LEAPP / OS Update
     project: Project Leapp
     playbook: pkgs_full_update.yml
     inventory: Workshop Inventory
     limit: web
     credentials:
       - Workshop Credential
-  - name: Leapp Analysis
+  - name: LEAPP / Analysis
     project: Project Leapp
     playbook: analysis.yml
     inventory: Workshop Inventory
@@ -29,7 +29,7 @@ controller_templates:
       leapp_metadata_url: https://host.location/leapp-data-21.tar.gz
       leapp_repos_enabled: []
     ask_variables_on_launch: true
-  - name: Leapp Upgrade
+  - name: LEAPP / Upgrade
     project: Project Leapp
     playbook: upgrade.yml
     inventory: Workshop Inventory
@@ -40,21 +40,14 @@ controller_templates:
       leapp_upgrade_type: connected
       leapp_repos_enabled: []
     ask_variables_on_launch: true
-  - name: Leapp Analysis
-    project: Project Leapp
-    playbook: analysis.yml
-    inventory: Workshop Inventory
-    limit: web
-    credentials:
-      - Workshop Credential
-  - name: Rectify RHEL7
+  - name: LEAPP / Rectify RHEL7
     project: Project Leapp
     playbook: rectify_rhel7.yml
     inventory: Workshop Inventory
     limit: rhel7
     credentials:
       - Workshop Credential
-  - name: Snapshot Instance
+  - name: LEAPP / Snapshot Instance
     project: Project Leapp
     playbook: snapshot_instance.yml
     inventory: Workshop Inventory
@@ -69,7 +62,7 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
-  - name: Snapshot Instance / Revert
+  - name: LEAPP / Snapshot Instance / Revert
     project: Project Leapp
     playbook: snapshot_revert.yml
     inventory: Workshop Inventory
@@ -89,7 +82,7 @@ controller_templates:
           Workshop: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           Environment: leapp
-  - name: Instance Details
+  - name: UTILTIY / Instance Details
     project: Project Leapp
     playbook: instance_details.yml
     inventory: Workshop Inventory
@@ -103,7 +96,7 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
-  - name: Update inventories via dynamic sources
+  - name: UTILTIY / Update inventories via dynamic sources
     project: Project Leapp
     playbook: inventory_source_update.yml
     inventory: Workshop Inventory
