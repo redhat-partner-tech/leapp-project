@@ -10,14 +10,14 @@ controller_templates:
       - Workshop Credential
     extra_vars:
       _hosts: all
-  - name: LEAPP / OS Update
+  - name: EXERCISE / OS Update
     project: Project Leapp
     playbook: pkgs_full_update.yml
     inventory: Workshop Inventory
     limit: web
     credentials:
       - Workshop Credential
-  - name: LEAPP / Analysis
+  - name: EXERCISE / Analysis
     project: Project Leapp
     playbook: analysis.yml
     inventory: Workshop Inventory
@@ -29,7 +29,7 @@ controller_templates:
       leapp_metadata_url: https://host.location/leapp-data-21.tar.gz
       leapp_repos_enabled: []
     ask_variables_on_launch: true
-  - name: LEAPP / Upgrade
+  - name: EXERCISE / Upgrade
     project: Project Leapp
     playbook: upgrade.yml
     inventory: Workshop Inventory
@@ -40,14 +40,14 @@ controller_templates:
       leapp_upgrade_type: connected
       leapp_repos_enabled: []
     ask_variables_on_launch: true
-  - name: LEAPP / Rectify RHEL7
+  - name: EXERCISE / Rectify RHEL7
     project: Project Leapp
     playbook: rectify_rhel7.yml
     inventory: Workshop Inventory
     limit: rhel7
     credentials:
       - Workshop Credential
-  - name: LEAPP / Snapshot Instance
+  - name: EXERCISE / Snapshot Instance
     project: Project Leapp
     playbook: snapshot_instance.yml
     inventory: Workshop Inventory
@@ -62,7 +62,7 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
-  - name: LEAPP / Snapshot Instance / Revert
+  - name: EXERCISE / Snapshot Instance / Revert
     project: Project Leapp
     playbook: snapshot_revert.yml
     inventory: Workshop Inventory
