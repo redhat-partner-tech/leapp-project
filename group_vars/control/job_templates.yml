@@ -62,7 +62,7 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
-  - name: EXERCISE / Snapshot Instance / Revert
+  - name: EXERCISE / Snapshot Rollback
     project: Project Leapp
     playbook: snapshot_revert.yml
     inventory: Workshop Inventory
