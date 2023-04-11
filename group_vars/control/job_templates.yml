@@ -40,9 +40,9 @@ controller_templates:
       leapp_upgrade_type: connected
       leapp_repos_enabled: []
     ask_variables_on_launch: true
-  - name: EXERCISE / Rectify RHEL7
+  - name: EXERCISE / Remediation / RHEL7
     project: Project Leapp
-    playbook: rectify_rhel7.yml
+    playbook: remediate_rhel7.yml
     inventory: Workshop Inventory
     limit: rhel7
     credentials:
@@ -82,7 +82,7 @@ controller_templates:
           Workshop: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           Environment: leapp
-  - name: UTILTIY / Instance Details
+  - name: UTILITY / Instance Details
     project: Project Leapp
     playbook: instance_details.yml
     inventory: Workshop Inventory
@@ -96,7 +96,7 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
-  - name: UTILTIY / Update inventories via dynamic sources
+  - name: UTILITY / Update inventories via dynamic sources
     project: Project Leapp
     playbook: inventory_source_update.yml
     inventory: Workshop Inventory
