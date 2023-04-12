@@ -40,11 +40,17 @@ controller_templates:
       leapp_upgrade_type: connected
       leapp_repos_enabled: []
     ask_variables_on_launch: true
+  - name: EXERCISE / Validate
+    project: Project Leapp
+    playbook: validation.yml
+    inventory: Workshop Inventory
+    limit: web
+    credentials:
+      - Workshop Credential
   - name: EXERCISE / Remediation / RHEL7
     project: Project Leapp
     playbook: remediate_rhel7.yml
-    inventory: Workshop Inventory
-    limit: rhel7
+    inventory: rhel7
     credentials:
       - Workshop Credential
   - name: EXERCISE / Snapshot Instance
