@@ -1,16 +1,25 @@
 ---
 - name: Apply all available package updates
   hosts: all
-  gather_facts: true
+  # gather_facts: true
+  gather_facts: false
   become: true
   strategy: free
   tasks:
-    - name: Wait for connection...
-      ansible.builtin.wait_for_connection:
-        connect_timeout: 20
-        sleep: 5
-        delay: 5
-        timeout: 300
+    # - name: Wait for connection...
+    #   ansible.builtin.wait_for_connection:
+    #     connect_timeout: 20
+    #     sleep: 5
+    #     delay: 5
+    #     timeout: 300
+    - name: Wait for connection...and gather facts
+      ansible.builtin.setup:
+        gather_timeout: 60
+      register: result
+      ignore_errors: true
+      until: result | success
+      retries: 10
+      delay: 10
 
     - name: Upgrade RHEL 7 OS to latest packages available
       ansible.builtin.yum:
