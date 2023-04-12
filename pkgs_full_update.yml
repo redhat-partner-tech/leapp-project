@@ -15,9 +15,9 @@
     - name: Wait for connection...and gather facts
       ansible.builtin.setup:
         gather_timeout: 60
-      register: result
+      register: setup_result
       ignore_errors: true
-      until: result | success
+      until: "setup_result is not failed"
       retries: 10
       delay: 10
 
