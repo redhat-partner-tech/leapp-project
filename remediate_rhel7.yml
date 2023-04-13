@@ -4,6 +4,11 @@
   gather_facts: true
   become: true
   strategy: free
+  vars:
+    # kernel_modules_to_unload: []
+    kernel_modules_to_unload:
+      - floppy
+      - pata_acpi
   tasks:
     - name: Wait for connection...
       ansible.builtin.wait_for_connection:
@@ -12,17 +17,11 @@
         delay: 5
         timeout: 300
 
-    - name: Remove kernel modules
-      ansible.builtin.shell: |
-        set -o pipefail
-        rmmod "{{ item }}"
-      args:
-        executable: /bin/bash
-      register: rmmod_out
-      changed_when: rmmod_out.rc != 0
-      loop:
-        - floppy
-        - pata_acpi
+    - name: Kernel modules defined by kernel_modules_to_unload are unloaded
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: absent
+      loop: "{{ kernel_modules_to_unload }}"
 
     - name: Remove pam_pkcs11 module
       ansible.builtin.shell: |
