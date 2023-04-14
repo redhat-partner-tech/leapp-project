@@ -17,6 +17,19 @@ controller_templates:
     limit: web
     credentials:
       - Workshop Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
   - name: EXERCISE / Analysis
     project: Project Leapp
     playbook: analysis.yml
@@ -48,6 +61,19 @@ controller_templates:
     limit: web
     credentials:
       - Workshop Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
     extra_vars:
       leapp_upgrade_type: connected
       leapp_repos_enabled: []

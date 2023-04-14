@@ -1,6 +1,6 @@
 ---
 - name: Apply all available package updates
-  hosts: all
+  hosts: "{{ rhel_inventory_group | default(omit) }}"
   # gather_facts: true
   gather_facts: false
   become: true
