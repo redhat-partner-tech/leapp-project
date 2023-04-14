@@ -59,12 +59,25 @@ controller_templates:
     limit: web
     credentials:
       - Workshop Credential
-  - name: EXERCISE / Remediation / RHEL7
+  - name: EXERCISE / Remediation
     project: Project Leapp
-    playbook: remediate_rhel7.yml
-    inventory: rhel7
+    playbook: remediate.yml
+    inventory: Workshop Inventory
     credentials:
       - Workshop Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
   - name: EXERCISE / Snapshot Instance
     project: Project Leapp
     playbook: snapshot_instance.yml
