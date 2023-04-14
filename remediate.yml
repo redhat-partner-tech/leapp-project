@@ -12,5 +12,7 @@
 
   handlers:
     - name: "Restart sshd"
-      ansible.builtin.import_tasks: remediate_handler_sshd.yml
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
 ...
