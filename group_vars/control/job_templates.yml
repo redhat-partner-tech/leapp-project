@@ -21,9 +21,21 @@ controller_templates:
     project: Project Leapp
     playbook: analysis.yml
     inventory: Workshop Inventory
-    limit: web
     credentials:
       - Workshop Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
     extra_vars:
       leapp_upgrade_type: connected
       leapp_metadata_url: https://host.location/leapp-data-21.tar.gz
