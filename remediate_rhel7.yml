@@ -6,6 +6,12 @@
     delay: 5
     timeout: 300
 
+- name: Define kernel modules to unload
+  ansible.builtin.set_fact:
+    kernel_modules_to_unload:
+      - floppy
+      - pata_acpi
+
 - name: Kernel modules defined by kernel_modules_to_unload are unloaded
   community.general.modprobe:
     name: "{{ item }}"
