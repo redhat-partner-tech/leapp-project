@@ -18,7 +18,7 @@ controller_inventory_sources:
         - private-dns-name
       keyed_groups:
         - key: tags['operating_system'] ~ '' ~ tags['os_major_version']
-          trailing_separator: false
+      leading_separator: false
       compose:
         # set the ansible_host variable to connect with the private IP address without changing the hostname
         ansible_host: private_ip_address
@@ -42,8 +42,8 @@ controller_inventory_sources:
         - tag:Name
         - private-dns-name
       keyed_groups:
-        - prefix: os
-          key: tags['operating_system'] ~ '' ~ tags['os_major_version']
+        - key: tags['operating_system'] ~ '' ~ tags['os_major_version']
+      leading_separator: false
       compose:
         # set the ansible_host variable to connect with the private IP address without changing the hostname
         ansible_host: private_ip_address
@@ -67,8 +67,8 @@ controller_inventory_sources:
         - tag:Name
         - private-dns-name
       keyed_groups:
-        - prefix: os
-          key: tags['operating_system'] ~ '' ~ tags['os_major_version']
+        - key: tags['operating_system'] ~ '' ~ tags['os_major_version']
+      leading_separator: false
       compose:
         # set the ansible_host variable to connect with the private IP address without changing the hostname
         ansible_host: private_ip_address
