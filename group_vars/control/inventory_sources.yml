@@ -1,7 +1,7 @@
 ---
 controller_inventory_sources:
   - name: EC2 Dynamic Source - rhel7
-    inventory: rhel7
+    inventory: Workshop Inventory
     source: ec2
     source_vars:
       regions:
@@ -16,6 +16,9 @@ controller_inventory_sources:
         - tag:NodeName
         - tag:Name
         - private-dns-name
+      keyed_groups:
+        - prefix: os
+          key: tags['operating_system'] ~ '' ~ tags['operating_system']
       compose:
         # set the ansible_host variable to connect with the private IP address without changing the hostname
         ansible_host: private_ip_address
