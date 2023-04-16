@@ -1,0 +1,35 @@
+---
+- name: Get instance details - amazon.aws.ec2_instance_info
+  hosts: "{{ HOSTS | default('control[0]') }}"
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: "Get instance details"
+      ansible.builtin.include_role:
+        name: infra.leapp.snapshot
+        tasks_from: aws/get_instance_details
+
+- name: Get instance ansible facts
+  hosts: "{{ rhel_inventory_group | default(omit) }}"
+  become: true
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: /usr/libexec/platform-python
+  tasks:
+    - name: Wait for connection...and gather facts
+      ansible.builtin.setup:
+        gather_timeout: 60
+      register: instance_facts
+      ignore_errors: true
+      until: "instance_facts is not failed"
+      retries: 10
+      delay: 10
+
+    - name: Debug - instances_details via amazon.aws.ec2_instance_info
+      ansible.builtin.debug:
+        msg: "{{ instances_details }}"
+
+    - name: Debug - instance_facts via ansible
+      ansible.builtin.debug:
+        msg: "{{ instance_facts }}"
+...
