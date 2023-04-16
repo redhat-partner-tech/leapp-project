@@ -4,7 +4,6 @@ controller_templates:
     project: Project Leapp
     playbook: fact_scan.yml
     inventory: Workshop Inventory
-    limit: web
     use_fact_cache: true
     credentials:
       - Workshop Credential
@@ -14,7 +13,6 @@ controller_templates:
     project: Project Leapp
     playbook: pkgs_full_update.yml
     inventory: Workshop Inventory
-    limit: web
     credentials:
       - Workshop Credential
     survey_enabled: true
@@ -58,7 +56,6 @@ controller_templates:
     project: Project Leapp
     playbook: upgrade.yml
     inventory: Workshop Inventory
-    limit: web
     credentials:
       - Workshop Credential
     survey_enabled: true
@@ -82,9 +79,21 @@ controller_templates:
     project: Project Leapp
     playbook: validation.yml
     inventory: Workshop Inventory
-    limit: web
     credentials:
       - Workshop Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
   - name: EXERCISE / Remediation
     project: Project Leapp
     playbook: remediate.yml
@@ -143,7 +152,6 @@ controller_templates:
     project: Project Leapp
     playbook: instance_details.yml
     inventory: Workshop Inventory
-    limit: ansible-1
     credentials:
       - Workshop Credential
     extra_vars:
