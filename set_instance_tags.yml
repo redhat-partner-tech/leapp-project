@@ -9,6 +9,10 @@
         name: infra.leapp.snapshot
         tasks_from: aws/get_instance_details
 
+    - name: Debug - instances_details via amazon.aws.ec2_instance_info
+      ansible.builtin.debug:
+        msg: "{{ instances_details }}"
+
 - name: Get instance ansible facts
   hosts: "{{ rhel_inventory_group | default(omit) }}"
   become: true
