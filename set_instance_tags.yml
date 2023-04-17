@@ -35,7 +35,7 @@
   tasks:
     - name: Wait for connection...and gather facts
       ansible.builtin.setup:
-        gather_timeout: 60
+        gather_timeout: 120
       register: instance_facts
       ignore_errors: true
       until: "instance_facts is not failed"
