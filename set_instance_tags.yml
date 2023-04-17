@@ -45,7 +45,7 @@
 
     - name: Share instances_details facts from ansible-1 among all hosts
       ansible.builtin.set_fact:
-        instances_details: "{{ hostvars['ansible1']['instances_details'] }}"
+        instances_details: "{{ hostvars['ansible-1']['instances_details'] }}"
       run_once: true
 
     - name: Debug - instances_details via amazon.aws.ec2_instance_info
