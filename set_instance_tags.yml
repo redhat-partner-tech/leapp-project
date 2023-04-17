@@ -1,6 +1,6 @@
 ---
 - name: Get instance details - amazon.aws.ec2_instance_info
-  hosts: "{{ HOSTS | default('control[0]') }}"
+  hosts: "{{ all | default('control[0]') }}"
   connection: local
   gather_facts: false
   tasks:
@@ -28,6 +28,11 @@
       until: "instance_facts is not failed"
       retries: 10
       delay: 10
+
+    - name: Share instances_details facts from ansible-1 among all hosts
+      ansible.builtin.set_fact:
+        instances_details: "{{ hostvars.ansible-1.instances_details }}"
+      run_once: true
 
     - name: Debug - instances_details via amazon.aws.ec2_instance_info
       ansible.builtin.debug:
