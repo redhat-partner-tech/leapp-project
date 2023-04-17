@@ -34,7 +34,7 @@
               { item : instances_details | selectattr('instance_id', 'defined') | map(attribute='instance_id') }
                   )
           }}
-      with_items: "{{ instances_details }}"
+      with_items: "{{ instances_details['instances'] }}"
       when: instances_details is not none
 
     - name: Debug - host_distribution_major_version and host_ec2_instance_id
