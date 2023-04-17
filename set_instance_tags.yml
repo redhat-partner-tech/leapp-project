@@ -15,19 +15,17 @@
 
     - name: Initialize list vars
       ansible.builtin.set_fact:
-        host_distribution_major_version: "{{ instances_details.instances | selectattr('tags.os_major_version', 'defined') | map(attribute='tags.os_major_version') }}"
-        host_distribution_major_version_inv: "{{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='tags.os_major_version') }}"
-        host_short_name: "{{ instances_details.instances | selectattr('tags.short_name', 'defined') | map(attribute='tags.short_name') }}"
+        # host_distribution_major_version: "{{ instances_details.instances | selectattr('tags.os_major_version', 'defined') | map(attribute='tags.os_major_version') }}"
+        host_distribution_major_version: "{{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='tags.os_major_version') }}"
+        host_short_name: "{{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='tags.short_name') }}"
         host_ec2_instance_id: "{{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='instance_id') }}"
 
     - name: Debug - host_distribution_major_version and host_ec2_instance_id and more
       ansible.builtin.debug:
         msg:
           - "{{ host_distribution_major_version }}"
-          - "{{ host_distribution_major_version_inv }}"
           - "{{ host_short_name }}"
           - "{{ host_ec2_instance_id }}"
-          - "{{ rhel_inventory_group.split('rhel')[1] }}"
 
 - name: Get instance ansible facts
   hosts: "{{ rhel_inventory_group | default(omit) }}"
@@ -52,7 +50,10 @@
 
     - name: Debug - instances_details via amazon.aws.ec2_instance_info
       ansible.builtin.debug:
-        msg: "{{ instances_details }}"
+        msg:
+          - "host_distribution_major_version: {{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='tags.os_major_version') }}"
+          - "host_short_name: {{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='tags.short_name') }}"
+          - "host_ec2_instance_id: {{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='instance_id') }}"
 
     - name: Debug - instance_facts via ansible
       ansible.builtin.debug:
