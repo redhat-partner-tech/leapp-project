@@ -11,7 +11,7 @@
 
     - name: Debug - instances_details via amazon.aws.ec2_instance_info
       ansible.builtin.debug:
-        msg: "{{ instances_details['instances'] | [0] }}"
+        msg: "{{ instances_details.instances | selectattr('tags.os_major_version', 'defined') }}"
 
     - name: Initialize list vars
       ansible.builtin.set_fact:
