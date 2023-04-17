@@ -13,6 +13,35 @@
       ansible.builtin.debug:
         msg: "{{ instances_details }}"
 
+    - name: Initialize list vars
+      ansible.builtin.set_fact:
+        host_distribution_major_version: {}
+        host_ec2_instance_id: {}
+
+    - name: "Set facts based ec2 info"
+      ansible.builtin.set_fact:
+        host_distribution_major_version: >
+          {{
+            host_distribution_major_version |
+            combine(
+              { item : instances_details | selectattr('tags.os_major_version', 'defined') | map(attribute='tags.os_major_version') }
+                  )
+          }}
+        host_ec2_instance_id: >
+          {{
+            host_ec2_instance_id |
+            combine(
+              { item : instances_details | selectattr('instance_id', 'defined') | map(attribute='instance_id') }
+                  )
+          }}
+      with_items: "{{ instances_details }}"
+      when: instances_details is not none
+
+    - name: Debug - iterate through combined
+      ansible.builtin.debug:
+        msg: "{{ host_distribution_major_version[item], host_ec2_instance_id[item] }}"
+      loop: "{{ instances_details }}"
+
 - name: Get instance ansible facts
   hosts: "{{ rhel_inventory_group | default(omit) }}"
   become: true
