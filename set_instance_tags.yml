@@ -15,27 +15,8 @@
 
     - name: Initialize list vars
       ansible.builtin.set_fact:
-        host_distribution_major_version: {}
-        host_ec2_instance_id: {}
-
-    - name: "Set facts based ec2 info"
-      ansible.builtin.set_fact:
-        host_distribution_major_version: >
-          {{
-            host_distribution_major_version |
-            combine(
-              { item : instances_details | selectattr('tags.os_major_version', 'defined') | map(attribute='tags.os_major_version') }
-                  )
-          }}
-        host_ec2_instance_id: >
-          {{
-            host_ec2_instance_id |
-            combine(
-              { item : instances_details | selectattr('instance_id', 'defined') | map(attribute='instance_id') }
-                  )
-          }}
-      with_items: "{{ instances_details['instances'] }}"
-      when: instances_details is not none
+        host_distribution_major_version: "{{ instances_details.instances | selectattr('tags.os_major_version', 'defined') | map(attribute='tags.os_major_version') }}"
+        host_ec2_instance_id: "{{ instances_details.instances | selectattr('instance_id', 'defined') | map(attribute='instance_id') }}"
 
     - name: Debug - host_distribution_major_version and host_ec2_instance_id
       ansible.builtin.debug:
