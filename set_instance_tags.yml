@@ -19,12 +19,13 @@
         host_short_name: "{{ instances_details.instances | selectattr('tags.short_name', 'defined') | map(attribute='tags.short_name') }}"
         host_ec2_instance_id: "{{ instances_details.instances | selectattr('instance_id', 'defined') | map(attribute='instance_id') }}"
 
-    - name: Debug - host_distribution_major_version and host_ec2_instance_id
+    - name: Debug - host_distribution_major_version and host_ec2_instance_id and more
       ansible.builtin.debug:
         msg:
           - "{{ host_distribution_major_version }}"
           - "{{ host_short_name }}"
           - "{{ host_ec2_instance_id }}"
+          - "{{ rhel_inventory_group.split('rhel')[1] }}"
 
 - name: Get instance ansible facts
   hosts: "{{ rhel_inventory_group | default(omit) }}"
