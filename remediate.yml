@@ -1,0 +1,18 @@
+---
+- name: Remediate
+  hosts: "{{ rhel_inventory_group | default(omit) }}"
+  strategy: free
+  gather_facts: true
+  become: true
+  force_handlers: true
+  tasks:
+    - name: "Remediate rhel7 systems"
+      when: rhel_inventory_group == "rhel7"
+      ansible.builtin.import_tasks: remediate_rhel7.yml
+
+  handlers:
+    - name: "Restart sshd"
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+...

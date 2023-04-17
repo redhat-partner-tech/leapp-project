@@ -1,7 +1,7 @@
 ---
 controller_inventory_sources:
   - name: EC2 Dynamic Source - rhel7
-    inventory: rhel7
+    inventory: Workshop Inventory
     source: ec2
     source_vars:
       regions:
@@ -16,6 +16,9 @@ controller_inventory_sources:
         - tag:NodeName
         - tag:Name
         - private-dns-name
+      keyed_groups:
+        - key: tags['operating_system'] ~ '' ~ tags['os_major_version']
+      leading_separator: false
       compose:
         # set the ansible_host variable to connect with the private IP address without changing the hostname
         ansible_host: private_ip_address
@@ -23,7 +26,7 @@ controller_inventory_sources:
     update_on_launch: false
     update_cache_timeout: 0
   - name: EC2 Dynamic Source - rhel8
-    inventory: rhel8
+    inventory: Workshop Inventory
     source: ec2
     source_vars:
       regions:
@@ -38,6 +41,9 @@ controller_inventory_sources:
         - tag:NodeName
         - tag:Name
         - private-dns-name
+      keyed_groups:
+        - key: tags['operating_system'] ~ '' ~ tags['os_major_version']
+      leading_separator: false
       compose:
         # set the ansible_host variable to connect with the private IP address without changing the hostname
         ansible_host: private_ip_address
@@ -45,7 +51,7 @@ controller_inventory_sources:
     update_on_launch: false
     update_cache_timeout: 0
   - name: EC2 Dynamic Source - rhel9
-    inventory: rhel9
+    inventory: Workshop Inventory
     source: ec2
     source_vars:
       regions:
@@ -60,6 +66,9 @@ controller_inventory_sources:
         - tag:NodeName
         - tag:Name
         - private-dns-name
+      keyed_groups:
+        - key: tags['operating_system'] ~ '' ~ tags['os_major_version']
+      leading_separator: false
       compose:
         # set the ansible_host variable to connect with the private IP address without changing the hostname
         ansible_host: private_ip_address

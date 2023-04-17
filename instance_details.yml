@@ -1,6 +1,6 @@
 ---
 - name: Get instance details
-  hosts: all
+  hosts: "{{ 'control[0]' | default(omit) }}"
   connection: local
   gather_facts: false
   tasks:

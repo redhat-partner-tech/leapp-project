@@ -2,31 +2,4 @@
 controller_inventories:
   - name: Workshop Inventory
     organization: Default
-  - name: rhel7
-    organization: Default
-    variables:
-      instances:
-        tags:
-          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
-          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          operating_system: rhel
-          os_major_version: 7
-  - name: rhel8
-    organization: Default
-    variables:
-      instances:
-        tags:
-          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
-          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          operating_system: rhel
-          os_major_version: 8
-  - name: rhel9
-    organization: Default
-    variables:
-      instances:
-        tags:
-          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
-          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          operating_system: rhel
-          os_major_version: 9
 ...
