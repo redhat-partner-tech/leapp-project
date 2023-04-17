@@ -40,7 +40,7 @@
     - name: Debug - iterate through combined
       ansible.builtin.debug:
         msg: "{{ host_distribution_major_version[item], host_ec2_instance_id[item] }}"
-      loop: "{{ instances_details.instances | list }}"
+      loop: "{{ instances_details['instances'] }}"
 
 - name: Get instance ansible facts
   hosts: "{{ rhel_inventory_group | default(omit) }}"
