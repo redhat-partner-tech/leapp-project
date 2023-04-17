@@ -37,10 +37,11 @@
       with_items: "{{ instances_details }}"
       when: instances_details is not none
 
-    - name: Debug - iterate through combined
+    - name: Debug - host_distribution_major_version and host_ec2_instance_id
       ansible.builtin.debug:
-        msg: "{{ host_distribution_major_version[item], host_ec2_instance_id[item] }}"
-      loop: "{{ instances_details['instances'] }}"
+        msg:
+          - "{{ host_distribution_major_version }}"
+          - "{{ host_ec2_instance_id }}"
 
 - name: Get instance ansible facts
   hosts: "{{ rhel_inventory_group | default(omit) }}"
