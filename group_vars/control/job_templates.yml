@@ -1,14 +1,5 @@
 ---
 controller_templates:
-  - name: UTILITY / Fact Scan
-    project: Project Leapp
-    playbook: fact_scan.yml
-    inventory: Workshop Inventory
-    use_fact_cache: true
-    credentials:
-      - Workshop Credential
-    extra_vars:
-      _hosts: all
   - name: EXERCISE / OS Update
     project: Project Leapp
     playbook: pkgs_full_update.yml
@@ -167,6 +158,34 @@ controller_templates:
     inventory: Workshop Inventory
     credentials:
       - Controller Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory to update
+          type: multiplechoice
+          variable: rhel_inventory_name
+          choices:
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
+  - name: UTILITY / Fact Scan
+    project: Project Leapp
+    playbook: fact_scan.yml
+    inventory: Workshop Inventory
+    use_fact_cache: true
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      _hosts: all
+  - name: UTILITY / Set instance tags
+    project: Project Leapp
+    playbook: set_instance_tags.yml
+    inventory: Workshop Inventory
+    credentials:
+      - Workshop Credential
     survey_enabled: true
     survey:
       name: ''
