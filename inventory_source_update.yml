@@ -11,6 +11,6 @@
     - name: Update inventory via source "EC2 Dynamic Source - {{ rhel_inventory_group }}"
       ansible.controller.inventory_source_update:
         name: "EC2 Dynamic Source - {{ rhel_inventory_group }}"
-        inventory: "{{ rhel_inventory_group }}"
+        inventory: Workshop Inventory
         organization: Default
 ...
