@@ -8,9 +8,9 @@
     controller_validate_certs: false
 
   tasks:
-    - name: Update inventory via source "EC2 Dynamic Source - {{ rhel_inventory_name }}"
+    - name: Update inventory via source "EC2 Dynamic Source - {{ rhel_inventory_group }}"
       ansible.controller.inventory_source_update:
-        name: "EC2 Dynamic Source - {{ rhel_inventory_name }}"
-        inventory: "{{ rhel_inventory_name }}"
+        name: "EC2 Dynamic Source - {{ rhel_inventory_group }}"
+        inventory: "{{ rhel_inventory_group }}"
         organization: Default
 ...

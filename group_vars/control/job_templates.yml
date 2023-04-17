@@ -165,7 +165,7 @@ controller_templates:
       spec:
         - question_name: Select inventory to update
           type: multiplechoice
-          variable: rhel_inventory_name
+          variable: rhel_inventory_group
           choices:
             - rhel7
             - rhel8
@@ -193,7 +193,7 @@ controller_templates:
       spec:
         - question_name: Select inventory to update
           type: multiplechoice
-          variable: rhel_inventory_name
+          variable: rhel_inventory_group
           choices:
             - rhel7
             - rhel8
