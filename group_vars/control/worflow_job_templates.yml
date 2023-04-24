@@ -22,9 +22,9 @@ controller_workflows:
         organization: Default
         all_parents_must_converge: false
         success_nodes:
-          - AUTO / Analysis
-      - identifier: AUTO / Analysis
-        unified_job_template: AUTO / Analysis
+          - AUTO / 01 Analysis
+      - identifier: AUTO / 01 Analysis
+        unified_job_template: AUTO / 01 Analysis
         organization: Default
         all_parents_must_converge: false
         success_nodes: []
