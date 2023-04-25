@@ -1,0 +1,13 @@
+---
+- name: Display snapshot details of instance
+  hosts: all
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Display snapshot details in region "{{ ec2_region }}"
+      ansible.builtin.include_role:
+        name: infra.leapp.snapshot
+      vars:
+        ec2_instance_action: "get_snapshot_details"
+        ansible_check_mode: true
+...
