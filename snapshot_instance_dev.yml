@@ -1,0 +1,22 @@
+---
+- name: Take snapshot of instance
+  hosts: "{{ 'control[0]' | default(omit) }}"
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: "Get instance details"
+      ansible.builtin.include_role:
+        name: infra.leapp.snapshot
+        tasks_from: aws/get_instance_details
+
+    - name: "Get snapshot details"
+      ansible.builtin.include_role:
+        name: infra.leapp.snapshot
+        tasks_from: aws/get_snapshot_details
+
+    - name: Debug output - instance_details - map(attribute='instance_id')
+      ansible.builtin.debug:
+        msg:
+          - "{{ instance_details.instances | map(attribute='instance_id') | list | unique }}"
+          - "{{ snapshot_details.snapshots | map(attribute='tags.Instance_id') | list | unique }}"
+...
