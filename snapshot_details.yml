@@ -9,5 +9,4 @@
         name: infra.leapp.snapshot
       vars:
         ec2_instance_action: "get_snapshot_details"
-        ansible_check_mode: true
 ...
