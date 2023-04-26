@@ -104,7 +104,7 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
-  - name: AUTO / Snapshot Instance
+  - name: AUTO / Snapshot Instance / rhel7
     project: Project Leapp
     playbook: snapshot_instance.yml
     inventory: Workshop Inventory
@@ -119,7 +119,25 @@ controller_templates:
         tags:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          operating_system: rhel
+          operating_system: rhel,
+          os_major_version: 7
+  - name: AUTO / Snapshot Instance / rhel8
+    project: Project Leapp
+    playbook: snapshot_instance.yml
+    inventory: Workshop Inventory
+    limit: ansible-1
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      snapshot: aws
+      ec2_stop_instance_for_snapshot: false
+      ec2_region: "{{ workshop_ec2_region }}"
+      instances:
+        tags:
+          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
+          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
+          operating_system: rhel,
+          os_major_version: 8
   - name: AUTO / Snapshot Rollback
     project: Project Leapp
     playbook: snapshot_revert.yml
@@ -153,6 +171,20 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
+  - name: UTILITY / Snapshot Details
+    project: Project Leapp
+    playbook: snapshot_details.yml
+    inventory: Workshop Inventory
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      snapshot: aws
+      ec2_region: "{{ workshop_ec2_region }}"
+      snapshots:
+        tags:
+          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
+          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
+          Environment: leapp
   - name: UTILITY / Update inventories via dynamic sources
     project: Project Leapp
     playbook: inventory_source_update.yml
