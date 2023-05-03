@@ -119,7 +119,7 @@ controller_templates:
         tags:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          operating_system: rhel,
+          operating_system: rhel
           os_major_version: 7
   - name: AUTO / Snapshot Instance / rhel8
     project: Project Leapp
@@ -136,7 +136,7 @@ controller_templates:
         tags:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          operating_system: rhel,
+          operating_system: rhel
           os_major_version: 8
   - name: AUTO / Snapshot Rollback
     project: Project Leapp
