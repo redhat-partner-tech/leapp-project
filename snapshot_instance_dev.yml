@@ -14,6 +14,14 @@
         name: infra.leapp.snapshot
         tasks_from: aws/get_snapshot_details
 
+    - name: Debug output - instance_details
+      ansible.builtin.debug:
+        msg: "{{ instance_details }}"
+
+    - name: Debug output - snapshot_details
+      ansible.builtin.debug:
+        msg: "{{ snapshot_details }}"
+
     - name: Debug output - instance_details - map(attribute='instance_id')
       ansible.builtin.debug:
         msg:
@@ -24,4 +32,5 @@
       ansible.builtin.debug:
         msg: "{{ item }} has a snapshot"
       loop: "{{ instance_details.instances | map(attribute='instance_id') | list }}"
+      # loop: "{{ snapshot_details.snapshots | map(attribute='tags.Instance_id') | list | selectattr('name', 'in', List1)|list }}"
 ...
