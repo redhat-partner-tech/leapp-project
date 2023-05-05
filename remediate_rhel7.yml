@@ -24,8 +24,6 @@
     leapp answer --section remove_pam_pkcs11_module_check.confirm=True
   args:
     executable: /bin/bash
-  register: rm_pam_pkcs11_out
-  changed_when: rm_pam_pkcs11_out.rc != 0
 
 - name: Configure sshd
   ansible.builtin.lineinfile:
