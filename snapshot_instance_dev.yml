@@ -37,9 +37,9 @@
 
     - name: Test match on presence of snapshot for instance
       ansible.builtin.debug:
-        msg: "{{ item }} has a snapshot"
-      # loop: "{{ instance_details.instances | map(attribute='instance_id') | list }}"
-      when: item in snapshot_details.snapshots | map(attribute='tags.Instance_id') | list | unique
-      loop: "{{ instance_details.instances | map(attribute='instance_id') | list | unique }}"
+        msg: "Existing snapshot present for system {{ item.tags.short_name }}."
+      when: item.instance_id in snapshot_details.snapshots | map(attribute='tags.Instance_id') | list | unique
+      loop: "{{ instance_details.instances }}"
+      # loop: "{{ instance_details.instances | map(attribute='instance_id') | list | unique }}"
       # loop: "{{ snapshot_details.snapshots | map(attribute='tags.Instance_id') | list | selectattr('name', 'in', List1)|list }}"
 ...
