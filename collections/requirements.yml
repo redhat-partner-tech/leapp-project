@@ -14,5 +14,5 @@ collections:
   source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
 - name: https://github.com/heatmiser/ansible-leapp.git
   type: git
-  version: project-dev
+  version: project-dev-merge
 ...

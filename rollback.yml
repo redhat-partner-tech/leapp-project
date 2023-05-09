@@ -5,17 +5,11 @@
   become: true
   force_handlers: true
   tasks:
-    - name: Initialize lock and logging
-      ansible.builtin.import_role:
-        name: infra.leapp.logging
-      vars:
-        job_name: 'RIPU LVM snapshot rollback'
-
     - name: Perform LVM snapshot rollback
       block:
         - name: Snapshot rollback
           ansible.builtin.import_role:
-            name: infra.leapp.rollback
+            name: infra.leapp.snapshot
 
 # always:
 #   - name: Clean up
