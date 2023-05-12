@@ -66,25 +66,6 @@ controller_templates:
       leapp_upgrade_type: connected
       leapp_repos_enabled: []
     ask_variables_on_launch: true
-  - name: AUTO / Validate
-    project: Project Leapp
-    playbook: validation.yml
-    inventory: Workshop Inventory
-    credentials:
-      - Workshop Credential
-    survey_enabled: true
-    survey:
-      name: ''
-      description: ''
-      spec:
-        - question_name: Select inventory group
-          type: multiplechoice
-          variable: rhel_inventory_group
-          choices:
-            - rhel7
-            - rhel8
-            - rhel9
-          required: true
   - name: AUTO / Remediation
     project: Project Leapp
     playbook: remediate.yml
