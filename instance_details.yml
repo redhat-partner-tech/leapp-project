@@ -3,6 +3,8 @@
   hosts: "{{ 'control[0]' | default(omit) }}"
   connection: local
   gather_facts: false
+  environment:
+    ANSIBLE_SHOW_PER_HOST_START: "True"
   tasks:
     - name: "Get instance details"
       ansible.builtin.include_role:
