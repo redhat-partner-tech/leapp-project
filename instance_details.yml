@@ -6,7 +6,7 @@
   tasks:
     - name: "Get instance details"
       ansible.builtin.include_role:
-        name: heatmiser.ansible_snpshot.aws
+        name: heatmiser.ansible_snapshot.aws
         tasks_from: instance/get_instance_details
 
     - name: Debug output - instance_details
