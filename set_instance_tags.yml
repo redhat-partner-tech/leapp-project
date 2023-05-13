@@ -6,7 +6,7 @@
   tasks:
     - name: "Get instance details"
       ansible.builtin.include_role:
-        name: infra.leapp.snapshot
+        name: heatmiser.ansible_snapshot.aws
         tasks_from: aws/get_instance_details
 
     - name: Debug - instance_details via amazon.aws.ec2_instance_info

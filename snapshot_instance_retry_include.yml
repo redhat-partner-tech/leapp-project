@@ -9,7 +9,7 @@
     #   when: retry_count | int != 0
     - name: Take snapshot of instances in region "{{ ec2_region }}"
       ansible.builtin.include_role:
-        name: infra.leapp.snapshot
+        name: heatmiser.ansible_snapshot.aws
       vars:
         ec2_instance_action: "snapshot_create"
 
