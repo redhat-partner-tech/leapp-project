@@ -12,9 +12,9 @@ collections:
 - name: infra.controller_configuration
   version: "2.3.1" # Version range identifiers (default: ``*``)
   source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
-- name: https://github.com/heatmiser/ansible-leapp.git
+- name: https://github.com/oamg/ansible-leapp.git
   type: git
-  version: project-dev-1.00
+  version: main
 - name: https://github.com/heatmiser/ansible-snapshot.git
   type: git
   version: main
