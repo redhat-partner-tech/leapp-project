@@ -6,7 +6,7 @@
   tasks:
     - name: Revert instance to snapshot in region "{{ ec2_region }}"
       ansible.builtin.include_role:
-        name: infra.leapp.snapshot
+        name: heatmiser.ansible_snapshot.aws
       vars:
         ec2_instance_action: "snapshot_revert"
 ...

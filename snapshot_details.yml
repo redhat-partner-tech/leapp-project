@@ -6,7 +6,7 @@
   tasks:
     - name: Display snapshot details in region "{{ ec2_region }}"
       ansible.builtin.include_role:
-        name: infra.leapp.snapshot
+        name: heatmiser.ansible_snapshot.aws
       vars:
         ec2_instance_action: "get_snapshot_details"
 ...

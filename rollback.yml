@@ -9,7 +9,7 @@
       block:
         - name: Snapshot rollback
           ansible.builtin.import_role:
-            name: infra.leapp.snapshot
+            name: heatmiser.ansible_snapshot.aws
 
 # always:
 #   - name: Clean up

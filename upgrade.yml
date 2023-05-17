@@ -4,12 +4,10 @@
   strategy: free
   become: true
   force_handlers: true
-  vars:
-    ansible_python_interpreter: /usr/libexec/platform-python
+  # vars:
+  #   ansible_python_interpreter: /usr/libexec/platform-python
   tasks:
     - name: Perform OS upgrade
-      block:
-        - name: Leapp upgrade
-          ansible.builtin.import_role:
-            name: infra.leapp.upgrade
+      ansible.builtin.import_role:
+        name: infra.leapp.upgrade
 ...

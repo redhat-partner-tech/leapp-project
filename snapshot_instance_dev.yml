@@ -6,7 +6,7 @@
   tasks:
     - name: "Get instance details"
       ansible.builtin.include_role:
-        name: infra.leapp.snapshot
+        name: heatmiser.ansible_snapshot.aws
         tasks_from: aws/get_instance_details
 
     - name: Set snapshots variables from instances variables
@@ -18,7 +18,7 @@
 
     - name: "Get snapshot details"
       ansible.builtin.include_role:
-        name: infra.leapp.snapshot
+        name: heatmiser.ansible_snapshot.aws
         tasks_from: aws/get_snapshot_details
 
     - name: Debug output - instance_details
