@@ -55,10 +55,10 @@
         group: root
         mode: '0755'
 
-    - name: Install leapp-rhui-aws package for preupgrade analysis for RHUI Marketplace Leapp upgrades
-      ansible.builtin.yum:
-        name: leapp-rhui-aws
-        state: latest
+    - name: Set analysis_packages_el7 package list fact for preupgrade analysis for RHUI Marketplace Leapp upgrades
+      ansible.builtin.set_fact:
+        analysis_packages_el7:
+          - leapp-rhui-aws
       when:
         - ansible_system_vendor == "Amazon EC2" or ansible_system_vendor == "Xen"
         - ansible_product_uuid|regex_search('^ec2') or ansible_product_uuid|regex_search('^EC2')
