@@ -5,11 +5,8 @@
   gather_facts: false
   vars:
     ec2_instance_action: "snapshot_create"
+    instances: "{{ instances_template }}"
   tasks:
-    - name: Define initial instances tags var from instances_template var
-      ansible.builtin.set_fact:
-            instances: "{{ instances_template }}"
-
     - name: Set instance tag os_major_version based on survey
       when: rhel_inventory_group != "ALL_rhel"
       block:
