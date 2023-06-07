@@ -46,7 +46,9 @@
             guid: "{{ instances.tags.guid }}"
             Environment: leapp
 
-    - name: Revert snapshot of instance
-      ansible.builtin.include_role:
-        name: heatmiser.ansible_snapshot.aws
+    - name: Rollback instance loop block
+      ansible.builtin.include_tasks: rollback_loop01.yml
+      loop: "{{ instance_details.instances }}"
+      # loop: "{{ instance_details.instances | map(attribute='instance_id') | list | unique }}"
+      # loop: "{{ snapshot_details.snapshots | map(attribute='tags.Instance_id') | list | selectattr('name', 'in', List1)|list }}"
 ...
