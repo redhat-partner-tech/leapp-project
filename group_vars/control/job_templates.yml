@@ -110,6 +110,10 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
+        - question_name: Enter server name - Leave blank to target all
+          type: text
+          variable: ripu_pet_name
+          required: false
     extra_vars:
       snapshot: aws
       ec2_stop_instance_for_snapshot: false
