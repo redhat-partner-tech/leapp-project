@@ -3,11 +3,26 @@
   hosts: "{{ 'control[0]' | default(omit) }}"
   connection: local
   gather_facts: false
+  vars:
+    ec2_instance_action: "snapshot_create"
   tasks:
+    - name: Set instance tag os_major_version based on survey
+      when: rhel_inventory_group != "ALL_rhel"
+      block:
+        - name: Set os_major_version tag for combination merge
+          ansible.builtin.set_fact:
+            instances_combine:
+              tags:
+                os_major_version: "{{ rhel_inventory_group | regex_replace('rhel') }}"
+
+        - name: Combine instance extra_var tags with survey-based instance tag os_major_version
+          ansible.builtin.set_fact:
+            instances: "{{ instances_template | ansible.builtin.combine(instances_combine, recursive=true) }}"
+
     - name: "Get instance details"
       ansible.builtin.include_role:
         name: heatmiser.ansible_snapshot.aws
-        tasks_from: aws/get_instance_details
+        tasks_from: instance/get_instance_details
 
     - name: Set snapshots variables from instances variables
       ansible.builtin.set_fact:
@@ -15,31 +30,9 @@
           tags:
             Student: "{{ instances.tags.Student }}"
             guid: "{{ instances.tags.guid }}"
+            Environment: leapp
 
-    - name: "Get snapshot details"
+    - name: Take snapshot of instance "{{ item.tags.short_name }}"
       ansible.builtin.include_role:
         name: heatmiser.ansible_snapshot.aws
-        tasks_from: aws/get_snapshot_details
-
-    - name: Debug output - instance_details
-      ansible.builtin.debug:
-        msg: "{{ instance_details }}"
-
-    - name: Debug output - snapshot_details
-      ansible.builtin.debug:
-        msg: "{{ snapshot_details }}"
-
-    - name: Debug output - instance_details - map(attribute='instance_id')
-      ansible.builtin.debug:
-        msg:
-          - "{{ instance_details.instances | map(attribute='instance_id') | list | unique }}"
-          - "{{ snapshot_details.snapshots | map(attribute='tags.Instance_id') | list | unique }}"
-
-    - name: Test match on presence of snapshot for instance
-      ansible.builtin.debug:
-        msg: "Existing snapshot present for system {{ item.tags.short_name }}."
-      when: item.instance_id in snapshot_details.snapshots | map(attribute='tags.Instance_id') | list | unique
-      loop: "{{ instance_details.instances }}"
-      # loop: "{{ instance_details.instances | map(attribute='instance_id') | list | unique }}"
-      # loop: "{{ snapshot_details.snapshots | map(attribute='tags.Instance_id') | list | selectattr('name', 'in', List1)|list }}"
 ...
