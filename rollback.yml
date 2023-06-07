@@ -5,7 +5,7 @@
   become: true
   force_handlers: true
   tasks:
-    - name: Perform LVM snapshot rollback
+    - name: Perform instance snapshot rollback
       block:
         - name: Snapshot rollback
           ansible.builtin.import_role:
