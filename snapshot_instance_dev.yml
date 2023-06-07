@@ -46,7 +46,7 @@
             guid: "{{ instances.tags.guid }}"
             Environment: leapp
 
-    - name: Take snapshot of instance "{{ item.tags.short_name }}"
+    - name: Take snapshot of instance
       ansible.builtin.include_role:
         name: heatmiser.ansible_snapshot.aws
 ...
