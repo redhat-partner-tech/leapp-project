@@ -1,7 +1,7 @@
 ---
 controller_workflows:
-  - name: AUTO / Workflow / Analysis
-    description: Workflow for Leapp Analysis
+  - name: AUTO / 02 Upgrade
+    description: Workflow for Snapshot and Leapp Upgrade
     # extra_vars:
     #   var_name: value
     inventory: Workshop Inventory
@@ -12,19 +12,28 @@ controller_workflows:
       name: ''
       description: ''
       spec:
-        - question_name: Server Name or Pattern
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - ALL_rhel
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
+        - question_name: Enter server name - Leave blank to target all
           type: text
-          variable: PREFIX
+          variable: ripu_pet_name
           required: false
     simplified_workflow_nodes:
-      - identifier: AUTO / Patch OS to latest
-        unified_job_template: AUTO / Patch OS to latest
+      - identifier: AUTO / Snapshot Instance
+        unified_job_template: AUTO / Snapshot Instance
         organization: Default
         all_parents_must_converge: false
         success_nodes:
-          - AUTO / 01 Analysis
-      - identifier: AUTO / 01 Analysis
-        unified_job_template: AUTO / 01 Analysis
+          - AUTO / Upgrade
+      - identifier: AUTO / Upgrade
+        unified_job_template: AUTO / Upgrade
         organization: Default
         all_parents_must_converge: false
         success_nodes: []
