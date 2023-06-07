@@ -63,6 +63,7 @@
           - cockpit-system
           - cockpit-leapp
         analysis_packages_el8:
+          - leapp-rhui-aws
           - leapp-upgrade
           - cockpit
           - cockpit-system

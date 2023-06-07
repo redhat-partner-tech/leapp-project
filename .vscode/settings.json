@@ -1,6 +1,0 @@
-{
-    "ansible.executionEnvironment.enabled": true,
-    "ansible.executionEnvironment.containerEngine": "podman",
-    "ansible.executionEnvironment.image": "registry.redhat.io/ansible-automation-platform-22/ee-supported-rhel8:latest",
-    "ansible.python.activationScript": "/home/msavage/pyvenv/ansible02/bin/activate"
-}
