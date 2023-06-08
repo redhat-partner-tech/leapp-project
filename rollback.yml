@@ -62,11 +62,11 @@
           ansible.builtin.set_fact:
             snapshots: "{{ snapshots | ansible.builtin.combine(snapshots_combine2, recursive=true) }}"
 
-    - name: Rollback instance loop block
-      ansible.builtin.include_tasks: rollback_loop01.yml
-      # loop: "{{ instance_details.instances }}"
-      # loop: "{{ instance_details.instances | map(attribute='instance_id') | list | unique }}"
-      # loop: "{{ snapshot_details.snapshots | map(attribute='tags.Instance_id') | list | selectattr('name', 'in', List1)|list }}"
-      # loop_control:
-      #   loop_var: instance_id
+    - name: Debug output - snapshots
+      ansible.builtin.debug:
+        msg: "{{ snapshots }}"
+
+    - name: Revert snapshot of instance
+      ansible.builtin.include_role:
+        name: heatmiser.ansible_snapshot.aws
 ...
