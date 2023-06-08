@@ -3,7 +3,7 @@
   ansible.builtin.set_fact:
     snapshots_combine:
       tags:
-        Instance_Id: "{{ instance_id }}"
+        Instance_id: "{{ instance_id }}"
 
 - name: Combine snapshot Instance_Id tag with existing snapshots definition
   ansible.builtin.set_fact:
