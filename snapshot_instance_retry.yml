@@ -1,0 +1,9 @@
+---
+- name: Take snapshot of instance
+  hosts: all
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Call snapshot retry tasks include
+      ansible.builtin.include_tasks: snapshot_instance_retry_include.yml
+...
