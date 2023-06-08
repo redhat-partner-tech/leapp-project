@@ -1,9 +1,44 @@
 ---
 - name: Take snapshot of instance
-  hosts: all
+  hosts: "{{ 'control[0]' | default(omit) }}"
   connection: local
   gather_facts: false
+  vars:
+    ec2_instance_action: "snapshot_create"
+    instances: "{{ instances_template }}"
   tasks:
-    - name: Call snapshot retry tasks include
-      ansible.builtin.include_tasks: snapshot_instance_retry_include.yml
+    - name: Set instance tag os_major_version based on survey
+      when: rhel_inventory_group != "ALL_rhel"
+      block:
+        - name: Set os_major_version tag for combination merge
+          ansible.builtin.set_fact:
+            instances_combine:
+              tags:
+                os_major_version: "{{ rhel_inventory_group | regex_replace('rhel') }}"
+
+        - name: Combine instance extra_var tags with survey-based instance tag os_major_version
+          ansible.builtin.set_fact:
+            instances: "{{ instances_template | ansible.builtin.combine(instances_combine, recursive=true) }}"
+
+    - name: Set instance tag short_name based on survey
+      when: ripu_pet_name is defined
+      block:
+        - name: Set short_name tag for combination merge
+          ansible.builtin.set_fact:
+            instances_combine2:
+              tags:
+                short_name: "{{ ripu_pet_name }}"
+
+        - name: Combine instance extra_var tags with survey-based instance tag short_name
+          ansible.builtin.set_fact:
+            instances: "{{ instances | ansible.builtin.combine(instances_combine2, recursive=true) }}"
+
+    - name: "Get instance details"
+      ansible.builtin.include_role:
+        name: heatmiser.ansible_snapshot.aws
+        tasks_from: instance/get_instance_details
+
+    - name: Take snapshot of instance
+      ansible.builtin.include_role:
+        name: heatmiser.ansible_snapshot.aws
 ...
