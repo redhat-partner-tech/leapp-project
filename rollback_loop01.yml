@@ -1,17 +1,15 @@
 ---
-- name: Revert snapshot block
-  block:
-    - name: Set Instance_Id tag for combination merge
-      ansible.builtin.set_fact:
-        snapshots_combine:
-          tags:
-            Instance_Id: "{{ item.instance_id }}"
+- name: Set Instance_Id tag for combination merge
+  ansible.builtin.set_fact:
+    snapshots_combine:
+      tags:
+        Instance_Id: "{{ item.instance_id }}"
 
-    - name: Combine snapshot Instance_Id tag with existing snapshots definition
-      ansible.builtin.set_fact:
-        snapshots: "{{ snapshots | ansible.builtin.combine(snapshots_combine, recursive=true) }}"
+- name: Combine snapshot Instance_Id tag with existing snapshots definition
+  ansible.builtin.set_fact:
+    snapshots: "{{ snapshots | ansible.builtin.combine(snapshots_combine, recursive=true) }}"
 
-    - name: Revert snapshot of instance
-      ansible.builtin.include_role:
-        name: heatmiser.ansible_snapshot.aws
+- name: Revert snapshot of instance
+  ansible.builtin.include_role:
+    name: heatmiser.ansible_snapshot.aws
 ...
