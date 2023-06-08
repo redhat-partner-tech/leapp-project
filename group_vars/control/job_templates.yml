@@ -123,26 +123,40 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
-  - name: AUTO / Snapshot Rollback
+  - name: AUTO / 03 Rollback
     project: Project Leapp
-    playbook: snapshot_revert.yml
+    playbook: rollback.yml
     inventory: Workshop Inventory
     limit: ansible-1
     credentials:
       - Workshop Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - ALL_rhel
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
+        - question_name: Enter server name - Leave blank to target all
+          type: text
+          variable: ripu_pet_name
+          required: false
     extra_vars:
       snapshot: aws
+      ec2_stop_instance_for_snapshot: false
       ec2_region: "{{ workshop_ec2_region }}"
-      instances:
+      instances_template:
         tags:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
-      snapshots:
-        tags:
-          Workshop: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
-          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          Environment: leapp
   - name: UTILITY / Instance Details
     project: Project Leapp
     playbook: instance_details.yml
