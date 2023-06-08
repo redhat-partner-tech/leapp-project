@@ -38,13 +38,13 @@
         name: heatmiser.ansible_snapshot.aws
         tasks_from: instance/get_instance_details
 
-    - name: Set snapshots variables from instances variables
-      ansible.builtin.set_fact:
-        snapshots:
-          tags:
-            Student: "{{ instances.tags.Student }}"
-            guid: "{{ instances.tags.guid }}"
-            Environment: leapp
+    # - name: Set snapshots variables from instances variables
+    #   ansible.builtin.set_fact:
+    #     snapshots:
+    #       tags:
+    #         Student: "{{ instances.tags.Student }}"
+    #         guid: "{{ instances.tags.guid }}"
+    #         Environment: leapp
 
     - name: Take snapshot of instance
       ansible.builtin.include_role:
