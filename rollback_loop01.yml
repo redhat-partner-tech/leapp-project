@@ -3,11 +3,15 @@
   ansible.builtin.set_fact:
     snapshots_combine:
       tags:
-        Instance_Id: "{{ item.instance_id }}"
+        Instance_Id: "{{ instance_id }}"
 
 - name: Combine snapshot Instance_Id tag with existing snapshots definition
   ansible.builtin.set_fact:
     snapshots: "{{ snapshots | ansible.builtin.combine(snapshots_combine, recursive=true) }}"
+
+- name: Debug output - snapshots
+  ansible.builtin.debug:
+    msg: "{{ snapshots }}"
 
 - name: "Get snapshot details"
   ansible.builtin.include_role:
