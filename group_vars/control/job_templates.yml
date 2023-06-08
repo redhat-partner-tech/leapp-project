@@ -150,7 +150,6 @@ controller_templates:
           required: false
     extra_vars:
       snapshot: aws
-      ec2_stop_instance_for_snapshot: false
       ec2_region: "{{ workshop_ec2_region }}"
       instances_template:
         tags:
