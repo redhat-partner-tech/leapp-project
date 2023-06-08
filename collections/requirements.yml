@@ -17,5 +17,5 @@ collections:
   version: main
 - name: https://github.com/heatmiser/ansible-snapshot.git
   type: git
-  version: main
+  version: dev-1.00
 ...
