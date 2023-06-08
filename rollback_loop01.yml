@@ -18,15 +18,7 @@
     name: heatmiser.ansible_snapshot.aws
     tasks_from: snapshot/get_snapshot_details
 
-# - name: Debug output - instance_details
-#   ansible.builtin.debug:
-#     msg: "{{ instance_details }}"
-
-# - name: Debug output - snapshot_details
-#   ansible.builtin.debug:
-#     msg: "{{ snapshot_details }}"
-
-# - name: Revert snapshot of instance
-#   ansible.builtin.include_role:
-#     name: heatmiser.ansible_snapshot.aws
+- name: Revert snapshot of instance
+  ansible.builtin.include_role:
+    name: heatmiser.ansible_snapshot.aws
 ...
