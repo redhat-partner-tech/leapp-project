@@ -1,6 +1,6 @@
 ---
 - name: Analysis
-  hosts: "{{ rhel_inventory_group | default(omit) }}"
+  hosts: "{{ ripu_pet_name | ternary( rhel_inventory_group | default(omit) ) }}"
   strategy: free
   gather_facts: true
   become: true
