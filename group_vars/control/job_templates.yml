@@ -40,6 +40,10 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
+        - question_name: Enter server name - Leave blank to target all
+          type: text
+          variable: ripu_pet_name
+          required: false
     extra_vars:
       leapp_upgrade_type: connected
       leapp_metadata_url: https://host.location/leapp-data-21.tar.gz
