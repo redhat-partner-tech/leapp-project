@@ -1,6 +1,6 @@
 ---
 - name: Display snapshot details of instance
-  hosts: "{{ control[0] | default(omit) }}"
+  hosts: "{{ 'control[0]' | default(omit) }}"
   connection: local
   gather_facts: false
   tasks:
