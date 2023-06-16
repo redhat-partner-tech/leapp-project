@@ -33,7 +33,7 @@
           ansible.builtin.set_fact:
             instances: "{{ instances | ansible.builtin.combine(instances_combine2, recursive=true) }}"
 
-    - name: "Get instance details"
+    - name: Get instance details
       ansible.builtin.include_role:
         name: heatmiser.ansible_snapshot.aws
         tasks_from: instance/get_instance_details
