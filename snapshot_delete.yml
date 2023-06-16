@@ -66,6 +66,11 @@
       ansible.builtin.debug:
         msg: "{{ snapshots }}"
 
+    - name: Get snapshot details
+      ansible.builtin.include_role:
+        name: heatmiser.ansible_snapshot.aws
+        tasks_from: snapshot/get_snapshot_details
+
     - name: Delete snapshot of instance
       ansible.builtin.include_role:
         name: heatmiser.ansible_snapshot.aws
