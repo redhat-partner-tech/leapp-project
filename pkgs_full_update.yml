@@ -1,6 +1,6 @@
 ---
 - name: Apply all available package updates
-  hosts: "{{ rhel_inventory_group | default(omit) }}"
+  hosts: "{{ ripu_pet_name is defined | ternary( ripu_pet_name, rhel_inventory_group | default(omit) ) }}"
   # gather_facts: true
   gather_facts: false
   become: true
