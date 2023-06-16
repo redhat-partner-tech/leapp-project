@@ -74,5 +74,6 @@
     - name: Delete snapshot of instance
       ansible.builtin.include_role:
         name: heatmiser.ansible_snapshot.aws
+        tasks_from: snapshot/snapshot_delete
 ...
 
