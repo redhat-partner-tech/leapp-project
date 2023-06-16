@@ -1,6 +1,6 @@
 ---
 - name: Delete snapshot of instance
-  hosts: "{{ all | default('control[0]') }}"
+  hosts: "{{ 'control[0]' | default(omit) }}"
   connection: local
   gather_facts: false
   vars:
