@@ -5,6 +5,7 @@
   gather_facts: false
   vars:
     instances: "{{ instances_template }}"
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
     - name: Set instance tag os_major_version based on survey
       when: rhel_inventory_group != "ALL_rhel"
