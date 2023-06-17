@@ -26,8 +26,8 @@ controller_workflows:
           variable: ripu_pet_name
           required: false
     simplified_workflow_nodes:
-      - identifier: AUTO / Snapshot Instance
-        unified_job_template: AUTO / Snapshot Instance
+      - identifier: UTILITY / Snapshot Instance
+        unified_job_template: UTILITY / Snapshot Instance
         organization: Default
         all_parents_must_converge: false
         success_nodes:
