@@ -187,6 +187,7 @@ controller_templates:
           required: false
     extra_vars:
       snapshot: aws
+      delete_prior_volume: true
       ec2_region: "{{ workshop_ec2_region }}"
       instances_template:
         tags:
