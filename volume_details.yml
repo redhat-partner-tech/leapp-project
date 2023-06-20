@@ -14,12 +14,4 @@
     - name: Debug output - volume_details
       ansible.builtin.debug:
         msg: "{{ volume_details }}"
-
-    # - name: Debug output - instance_details - map(attribute='instance_id')
-    #   ansible.builtin.debug:
-    #     msg: "{{ instance_details.instances | map(attribute='instance_id') | list | unique }}"
-
-    # - name: Debug output - instance_details - map(attribute='private_ip_address')
-    #   ansible.builtin.debug:
-    #     msg: "{{ instance_details.instances | map(attribute='private_ip_address') | list | unique }}"
 ...

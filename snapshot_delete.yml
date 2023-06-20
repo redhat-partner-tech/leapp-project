@@ -63,10 +63,6 @@
           ansible.builtin.set_fact:
             snapshots: "{{ snapshots | ansible.builtin.combine(snapshots_combine2, recursive=true) }}"
 
-    - name: Debug output - snapshots
-      ansible.builtin.debug:
-        msg: "{{ snapshots }}"
-
     - name: Get snapshot details
       ansible.builtin.include_role:
         name: heatmiser.ansible_snapshot.aws
