@@ -1,6 +1,6 @@
 ---
 controller_templates:
-  - name: AUTO / Patch OS to latest
+  - name: OS / Patch OS to latest
     project: Project Leapp
     playbook: pkgs_full_update.yml
     inventory: Workshop Inventory
@@ -49,7 +49,7 @@ controller_templates:
       leapp_metadata_url: https://host.location/leapp-data-21.tar.gz
       leapp_repos_enabled: []
     ask_variables_on_launch: true
-  - name: AUTO / Upgrade
+  - name: OS / Upgrade
     project: Project Leapp
     playbook: upgrade.yml
     inventory: Workshop Inventory
@@ -73,7 +73,7 @@ controller_templates:
       leapp_upgrade_type: connected
       leapp_repos_enabled: []
     ask_variables_on_launch: true
-  - name: AUTO / Remediation
+  - name: OS / Remediation
     project: Project Leapp
     playbook: remediate.yml
     inventory: Workshop Inventory

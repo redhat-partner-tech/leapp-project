@@ -31,9 +31,9 @@ controller_workflows:
         organization: Default
         all_parents_must_converge: false
         success_nodes:
-          - AUTO / Upgrade
-      - identifier: AUTO / Upgrade
-        unified_job_template: AUTO / Upgrade
+          - OS / Upgrade
+      - identifier: OS / Upgrade
+        unified_job_template: OS / Upgrade
         organization: Default
         all_parents_must_converge: false
         success_nodes: []
