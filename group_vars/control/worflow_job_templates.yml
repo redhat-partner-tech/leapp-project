@@ -26,8 +26,8 @@ controller_workflows:
           variable: ripu_pet_name
           required: false
     simplified_workflow_nodes:
-      - identifier: AUTO / Snapshot Instance
-        unified_job_template: AUTO / Snapshot Instance
+      - identifier: UTILITY / Snapshot Instance
+        unified_job_template: UTILITY / Snapshot Instance
         organization: Default
         all_parents_must_converge: false
         success_nodes:
@@ -36,5 +36,63 @@ controller_workflows:
         unified_job_template: AUTO / Upgrade
         organization: Default
         all_parents_must_converge: false
+        success_nodes: []
+  - name: AUTO / 04 Commit
+    description: Workflow for Snapshot delete and Update instance tags
+    # extra_vars:
+    #   var_name: value
+    inventory: Workshop Inventory
+    state: present
+    organization: Default
+    survey_enabled: true
+    survey_spec:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - ALL_rhel
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
+        - question_name: Enter server name - Leave blank to target all
+          type: text
+          variable: ripu_pet_name
+          required: false
+    simplified_workflow_nodes:
+      - identifier: UTILITY / Snapshot Delete
+        unified_job_template: UTILITY / Snapshot Delete
+        organization: Default
+        all_parents_must_converge: false
+        success_nodes:
+          - UTILITY / Set instance tags
+      - identifier: UTILITY / Set instance tags
+        unified_job_template: UTILITY / Set instance tags
+        organization: Default
+        all_parents_must_converge: false
+        success_nodes:
+          - EC2 Dynamic Source - rhel7
+          - EC2 Dynamic Source - rhel8
+          - EC2 Dynamic Source - rhel9
+      - identifier: EC2 Dynamic Source - rhel7
+        unified_job_template: EC2 Dynamic Source - rhel7
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        success_nodes: []
+      - identifier: EC2 Dynamic Source - rhel8
+        unified_job_template: EC2 Dynamic Source - rhel8
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        success_nodes: []
+      - identifier: EC2 Dynamic Source - rhel9
+        unified_job_template: EC2 Dynamic Source - rhel9
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
         success_nodes: []
 ...
