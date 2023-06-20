@@ -27,7 +27,8 @@
 
     - name: Ensure Leapp metadata is available for disconnected or RHUI Marketplace Leapp upgrades
       when: |
-        leapp_upgrade_type == 'disconnected' or
+        leapp_upgrade_type == 'satellite' or
+        leapp_upgrade_type == 'rhui' or
         (ansible_system_vendor == "Amazon EC2" and (ansible_product_uuid|regex_search('^ec2') or ansible_product_uuid|regex_search('^EC2')) and "'rhui' in yum_repolist.stdout") or
         (ansible_system_vendor == "Xen" and (ansible_product_uuid|regex_search('^ec2') or ansible_product_uuid|regex_search('^EC2')) and "'rhui' in yum_repolist.stdout")
       block:
