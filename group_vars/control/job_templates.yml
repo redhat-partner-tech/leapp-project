@@ -69,6 +69,10 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
+        - question_name: Enter server name - Leave blank to target all
+          type: text
+          variable: ripu_pet_name
+          required: false
     extra_vars:
       leapp_upgrade_type: rhui
       leapp_repos_enabled: []
@@ -93,6 +97,10 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
+        - question_name: Enter server name - Leave blank to target all
+          type: text
+          variable: ripu_pet_name
+          required: false
   - name: UTILITY / Snapshot Instance
     project: Project Leapp
     playbook: snapshot_instance.yml
