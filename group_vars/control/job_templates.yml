@@ -70,7 +70,7 @@ controller_templates:
             - rhel9
           required: true
     extra_vars:
-      leapp_upgrade_type: connected
+      leapp_upgrade_type: rhui
       leapp_repos_enabled: []
     ask_variables_on_launch: true
   - name: OS / Remediation
