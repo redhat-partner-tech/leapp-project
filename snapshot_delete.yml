@@ -1,11 +1,12 @@
 ---
-- name: Revert snapshot of instance
+- name: Delete snapshot of instance
   hosts: "{{ 'control[0]' | default(omit) }}"
   connection: local
   gather_facts: false
   vars:
-    ec2_instance_action: "snapshot_revert"
+    ec2_instance_action: "snapshot_delete"
     instances: "{{ instances_template }}"
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
     - name: Set snapshots variables from instances variables
       ansible.builtin.set_fact:
@@ -62,7 +63,14 @@
           ansible.builtin.set_fact:
             snapshots: "{{ snapshots | ansible.builtin.combine(snapshots_combine2, recursive=true) }}"
 
-    - name: Revert snapshot of instance
+    - name: Get snapshot details
       ansible.builtin.include_role:
         name: heatmiser.ansible_snapshot.aws
+        tasks_from: snapshot/get_snapshot_details
+
+    - name: Delete snapshot of instance
+      ansible.builtin.include_role:
+        name: heatmiser.ansible_snapshot.aws
+        tasks_from: snapshot/snapshot_delete
 ...
+
