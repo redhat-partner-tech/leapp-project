@@ -7,7 +7,7 @@
   force_handlers: true
   tasks:
     - name: "Remediate rhel7 systems"
-      when: rhel_inventory_group == "rhel7"
+      when: ansible_distribution_major_version|int == 7
       ansible.builtin.import_tasks: remediate_rhel7.yml
 
   handlers:
