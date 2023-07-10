@@ -25,7 +25,7 @@
         - "'rhui' in yum_repolist.stdout"
         - ansible_distribution_major_version|int == 7
 
-    - name: Ensure Leapp metadata is available for disconnected or RHUI Marketplace Leapp upgrades
+    - name: Ensure Leapp metadata is available for disconnected/satellite or RHUI Marketplace Leapp upgrades
       when: |
         leapp_upgrade_type == 'satellite' or
         (ansible_system_vendor == "Amazon EC2" and (ansible_product_uuid|regex_search('^ec2') or ansible_product_uuid|regex_search('^EC2')) and "'rhui' in yum_repolist.stdout") or
@@ -50,14 +50,6 @@
           until: leapp_metadata_installed is not failed
           retries: 10
           delay: 10
-
-    - name: Ensure leapp log directory exists
-      ansible.builtin.file:
-        path: /var/log/leapp
-        state: directory
-        owner: root
-        group: root
-        mode: '0755'
 
     - name: Set analysis package list facts for preupgrade analysis for RHUI Marketplace Leapp upgrades
       ansible.builtin.set_fact:
