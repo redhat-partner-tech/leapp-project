@@ -46,7 +46,7 @@ controller_templates:
           required: false
     extra_vars:
       leapp_upgrade_type: rhui
-      leapp_metadata_url: https://host.location/leapp-data-21.tar.gz
+      leapp_metadata_url: https://people.redhat.com/bmader/leapp-data-22.tar.gz
       leapp_repos_enabled: []
     ask_variables_on_launch: true
   - name: OS / Upgrade
