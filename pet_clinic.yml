@@ -68,12 +68,25 @@
       ansible.builtin.command: restorecon -Rv /data/lib/mysql
       become: true
 
-    - name: Change mysql db datadir path to /data/lib/mysql
+    - name: Change mysql db datadir path to /data/lib/mysql for RHEL7
       ansible.builtin.lineinfile:
         path: /etc/my.cnf
         regexp: '^datadir=/var/lib/mysql'
         line: 'datadir=/data/lib/mysql'
       become: true
+      when:
+        - ansible_os_family == 'RedHat'
+        - ansible_distribution_major_version|int == 7
+
+    - name: Change mysql db datadir path to /data/lib/mysql for RHEL8+
+      ansible.builtin.lineinfile:
+        path: /etc/my.cnf.d/mariadb-server.cnf
+        regexp: '^datadir=/var/lib/mysql'
+        line: 'datadir=/data/lib/mysql'
+      become: true
+      when:
+        - ansible_os_family == 'RedHat'
+        - ansible_distribution_major_version|int >= 8
 
     - name: MariaDB database service started
       ansible.builtin.service:
