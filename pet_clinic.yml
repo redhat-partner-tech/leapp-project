@@ -78,12 +78,21 @@
         - ansible_os_family == 'RedHat'
         - ansible_distribution_major_version|int == 7
 
-    - name: Change mysql db datadir path to /data/lib/mysql for RHEL8+
-      ansible.builtin.lineinfile:
-        path: /etc/my.cnf.d/mariadb-server.cnf
-        regexp: '^datadir=/var/lib/mysql'
-        line: 'datadir=/data/lib/mysql'
-      become: true
+    - name: RHEL8+ mariadb-server path and SELinux adjustments
+      block:
+        - name: Change mysql db datadir path to /data/lib/mysql for RHEL8+
+          ansible.builtin.lineinfile:
+            path: /etc/my.cnf.d/mariadb-server.cnf
+            regexp: '^datadir=/var/lib/mysql'
+            line: 'datadir=/data/lib/mysql'
+          become: true
+
+        - name: Set selinuxuser_tcp_server flag on and keep it persistent across reboots
+          ansible.posix.seboolean:
+            name: selinuxuser_tcp_server
+            state: true
+            persistent: true
+          become: true
       when:
         - ansible_os_family == 'RedHat'
         - ansible_distribution_major_version|int >= 8
