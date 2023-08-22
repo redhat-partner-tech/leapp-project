@@ -4,6 +4,9 @@
   strategy: free
   gather_facts: true
   become: false
+  pre_tasks:
+    - name: Populate service facts
+      ansible.builtin.service_facts:
   tasks:
     - name: Adoptium yum repo enabled
       ansible.builtin.yum_repository:
@@ -33,13 +36,43 @@
         permanent: true
         immediate: true
       become: true
-      when: "'firewalld' in ansible_facts.packages"
+      when:
+        - ansible_os_family == 'RedHat'
+        - ansible_distribution_major_version|int >= 7
+        - ansible_facts.services['firewalld.service'] is defined and ansible_facts.services['firewalld.service'].state == 'running'
+        - ansible_facts.services['firewalld.service'] is defined and ansible_facts.services['firewalld.service'].status == 'enabled'
 
     - name: Job spooling tools service started
       ansible.builtin.service:
         name: atd
         enabled: true
         state: started
+      become: true
+
+    - name: create /data/lib/mysql directory
+      ansible.builtin.file:
+        path: "/data/lib/mysql"
+        state: directory
+        owner: mysql
+        group: mysql
+      become: true
+
+    - name: Allow mysql db to modify files in /data/lib/mysql
+      community.general.sefcontext:
+        target: '/data/lib/mysql(-files|-keyring)?(/.*)?'
+        setype: mysqld_db_t
+        state: present
+      become: true
+
+    - name: Apply new mysql db SELinux file context to /data/lib/mysql
+      ansible.builtin.command: restorecon -Rv /data/lib/mysql
+      become: true
+
+    - name: Change mysql db datadir path to /data/lib/mysql
+      ansible.builtin.lineinfile:
+        path: /etc/my.cnf
+        regexp: '^datadir=/var/lib/mysql'
+        line: 'datadir=/data/lib/mysql'
       become: true
 
     - name: MariaDB database service started
@@ -51,7 +84,7 @@
 
     - name: Database created
       ansible.builtin.shell: |
-        mysql --user root <<EOF
+        mysql --user root --protocol TCP <<EOF
         CREATE DATABASE IF NOT EXISTS petclinic;
         ALTER DATABASE petclinic DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
         GRANT ALL PRIVILEGES ON petclinic.* TO 'petclinic'@'localhost' IDENTIFIED BY 'petclinic';
