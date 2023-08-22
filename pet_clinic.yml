@@ -1,0 +1,92 @@
+---
+- name: Pet Clinic application install
+  hosts: "{{ ripu_pet_name is defined | ternary( ripu_pet_name, rhel_inventory_group | default(omit) ) }}"
+  strategy: free
+  gather_facts: true
+  become: false
+  tasks:
+    - name: Adoptium yum repo enabled
+      ansible.builtin.yum_repository:
+        name: adoptium
+        description: Adoptium repo for Temurin OpenJDK
+        gpgkey: https://packages.adoptium.net/artifactory/api/gpg/key/public
+        baseurl: "https://packages.adoptium.net/artifactory/rpm/rhel/{{ ansible_facts.distribution_major_version }}/x86_64"
+      become: true
+
+    - name: Middleware installed
+      ansible.builtin.yum:
+        name:
+          - at
+          - mariadb
+          - mariadb-server
+          - temurin-17-jdk
+        state: present
+      become: true
+
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+
+    - name: Port 8080/tcp enabled with firewalld
+      ansible.posix.firewalld:
+        port: 8080/tcp
+        state: enabled
+        permanent: true
+        immediate: true
+      become: true
+      when: "'firewalld' in ansible_facts.packages"
+
+    - name: Job spooling tools service started
+      ansible.builtin.service:
+        name: atd
+        enabled: true
+        state: started
+      become: true
+
+    - name: MariaDB database service started
+      ansible.builtin.service:
+        name: mariadb
+        enabled: true
+        state: started
+      become: true
+
+    - name: Database created
+      ansible.builtin.shell: |
+        mysql --user root <<EOF
+        CREATE DATABASE IF NOT EXISTS petclinic;
+        ALTER DATABASE petclinic DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+        GRANT ALL PRIVILEGES ON petclinic.* TO 'petclinic'@'localhost' IDENTIFIED BY 'petclinic';
+        FLUSH PRIVILEGES;
+        EOF
+
+    - name: Clone spring-petclinic git repo
+      ansible.builtin.git:
+        repo: https://github.com/spring-projects/spring-petclinic.git
+        dest: "{{ ansible_facts.env.HOME }}/spring-petclinic"
+
+    - name: Start app web service
+      ansible.builtin.shell: |
+        echo 'cd $HOME/spring-petclinic && ./mvnw spring-boot:run -Dspring-boot.run.profiles=mysql >> $HOME/app.log 2>&1' | at now
+
+    - name: Wait for app service to start
+      ansible.builtin.wait_for:
+        port: 8080
+
+    - name: Start on boot cron entry
+      ansible.builtin.cron:
+        name: Pet Clinic app start on boot
+        special_time: reboot
+        job: 'cd $HOME/spring-petclinic && ./mvnw spring-boot:run -Dspring-boot.run.profiles=mysql >> $HOME/app.log 2>&1'
+
+    - name: Determine web app external URL
+      ansible.builtin.uri:
+        url: http://ifconfig.me/ip
+        return_content: true
+      register: external_ip
+
+    - name: Declare success
+      ansible.builtin.debug:
+        msg:
+          - The Spring Pet Clinic web app is installed and started successfully.
+          - Access the app at http://{{ external_ip.content }}:8080
+          - Have a nice day!
+...
