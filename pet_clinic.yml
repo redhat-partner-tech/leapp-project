@@ -31,6 +31,10 @@
             mode: '0755'
           become: true
 
+        - name: SELinux file context applied
+          ansible.builtin.command: restorecon -Rv /data/lib/mysql
+          become: true
+
         - name: Symlink created
           ansible.builtin.file:
             state: link
