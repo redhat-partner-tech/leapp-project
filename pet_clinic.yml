@@ -8,6 +8,51 @@
     - name: Populate service facts
       ansible.builtin.service_facts:
   tasks:
+    - name: Stat /var/lib/mysql
+      ansible.builtin.stat:
+        path: /var/lib/mysql
+      register: datadir
+
+    - name: Configure /data/lib/mysql directory
+      block:
+        - name: Substitute file contexts configured
+          community.general.sefcontext:
+            target: /data/lib/mysql
+            substitute: /var/lib/mysql
+            state: present
+          become: true
+
+        - name: Data directory created
+          ansible.builtin.file:
+            state: directory
+            path: /data/lib/mysql
+            owner: 27
+            group: 27
+            mode: '0755'
+          become: true
+
+        - name: SELinux file context applied
+          ansible.builtin.command: restorecon -Rv /data/lib/mysql
+          become: true
+
+        - name: Symlink created
+          ansible.builtin.file:
+            state: link
+            src: /data/lib/mysql
+            dest: /var/lib/mysql
+          become: true
+      when: not datadir.stat.exists
+
+    - name: Set selinuxuser_tcp_server flag on and keep it persistent across reboots
+      ansible.posix.seboolean:
+        name: selinuxuser_tcp_server
+        state: true
+        persistent: true
+      become: true
+      when:
+        - ansible_os_family == 'RedHat'
+        - ansible_distribution_major_version|int >= 8
+
     - name: Adoptium yum repo enabled
       ansible.builtin.yum_repository:
         name: adoptium
@@ -48,54 +93,6 @@
         enabled: true
         state: started
       become: true
-
-    - name: create /data/lib/mysql directory
-      ansible.builtin.file:
-        path: "/data/lib/mysql"
-        state: directory
-        owner: mysql
-        group: mysql
-      become: true
-
-    - name: Allow mysql db to modify files in /data/lib/mysql
-      community.general.sefcontext:
-        target: '/data/lib/mysql(-files|-keyring)?(/.*)?'
-        setype: mysqld_db_t
-        state: present
-      become: true
-
-    - name: Apply new mysql db SELinux file context to /data/lib/mysql
-      ansible.builtin.command: restorecon -Rv /data/lib/mysql
-      become: true
-
-    - name: Change mysql db datadir path to /data/lib/mysql for RHEL7
-      ansible.builtin.lineinfile:
-        path: /etc/my.cnf
-        regexp: '^datadir=/var/lib/mysql'
-        line: 'datadir=/data/lib/mysql'
-      become: true
-      when:
-        - ansible_os_family == 'RedHat'
-        - ansible_distribution_major_version|int == 7
-
-    - name: RHEL8+ mariadb-server path and SELinux adjustments
-      block:
-        - name: Change mysql db datadir path to /data/lib/mysql for RHEL8+
-          ansible.builtin.lineinfile:
-            path: /etc/my.cnf.d/mariadb-server.cnf
-            regexp: '^datadir=/var/lib/mysql'
-            line: 'datadir=/data/lib/mysql'
-          become: true
-
-        - name: Set selinuxuser_tcp_server flag on and keep it persistent across reboots
-          ansible.posix.seboolean:
-            name: selinuxuser_tcp_server
-            state: true
-            persistent: true
-          become: true
-      when:
-        - ansible_os_family == 'RedHat'
-        - ansible_distribution_major_version|int >= 8
 
     - name: MariaDB database service started
       ansible.builtin.service:
