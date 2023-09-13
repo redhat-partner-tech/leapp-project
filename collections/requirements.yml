@@ -15,7 +15,7 @@ collections:
 - name: infra.leapp
   version: "1.1.0" # Version range identifiers (default: ``*``)
   source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
-- name: https://github.com/heatmiser/ansible-snapshot.git
+- name: https://github.com/swapdisk/lvm_snapshots.git
   type: git
   version: main
 ...
