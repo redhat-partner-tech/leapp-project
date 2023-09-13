@@ -2,6 +2,7 @@
 controller_inventory_sources:
   - name: EC2 Dynamic Source - rhel7
     inventory: Workshop Inventory
+    execution_environment: Default execution environment
     source: ec2
     source_vars:
       regions:
@@ -27,6 +28,7 @@ controller_inventory_sources:
     update_cache_timeout: 0
   - name: EC2 Dynamic Source - rhel8
     inventory: Workshop Inventory
+    execution_environment: Default execution environment
     source: ec2
     source_vars:
       regions:
@@ -52,6 +54,7 @@ controller_inventory_sources:
     update_cache_timeout: 0
   - name: EC2 Dynamic Source - rhel9
     inventory: Workshop Inventory
+    execution_environment: Default execution environment
     source: ec2
     source_vars:
       regions:
@@ -68,6 +71,32 @@ controller_inventory_sources:
         - private-dns-name
       keyed_groups:
         - key: tags['operating_system'] ~ '' ~ tags['os_major_version']
+      leading_separator: false
+      compose:
+        # set the ansible_host variable to connect with the private IP address without changing the hostname
+        ansible_host: private_ip_address
+    overwrite: true
+    update_on_launch: false
+    update_cache_timeout: 0
+  - name: EC2 Dynamic Source - ALL_rhel
+    inventory: Workshop Inventory
+    execution_environment: Default execution environment
+    source: ec2
+    source_vars:
+      regions:
+        - "{{ workshop_ec2_region }}"
+      filters:
+        tag:guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
+        tag:Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
+        tag:operating_system: rhel
+      hostnames:
+        - tag:short_name
+        - tag:NodeName
+        - tag:Name
+        - private-dns-name
+      keyed_groups:
+        - prefix: ALL
+          key: tags['operating_system']
       leading_separator: false
       compose:
         # set the ansible_host variable to connect with the private IP address without changing the hostname

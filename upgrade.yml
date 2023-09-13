@@ -1,21 +1,13 @@
 ---
 - name: Upgrade
-  hosts: "{{ rhel_inventory_group | default(omit) }}"
+  hosts: "{{ ripu_pet_name is defined | ternary( ripu_pet_name, rhel_inventory_group | default(omit) ) }}"
   strategy: free
   become: true
   force_handlers: true
-  vars:
-    ansible_python_interpreter: /usr/libexec/platform-python
+  # vars:
+  #   ansible_python_interpreter: /usr/libexec/platform-python
   tasks:
-    - name: Initialize lock and logging
-      ansible.builtin.import_role:
-        name: infra.leapp.logging
-      vars:
-        job_name: 'RIPU in-place OS upgrade'
-
     - name: Perform OS upgrade
-      block:
-        - name: Leapp upgrade
-          ansible.builtin.import_role:
-            name: infra.leapp.upgrade
+      ansible.builtin.import_role:
+        name: infra.leapp.upgrade
 ...

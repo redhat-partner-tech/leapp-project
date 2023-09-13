@@ -1,62 +1,52 @@
 ---
-- name: Get instance details - amazon.aws.ec2_instance_info
+- name: Set instance tag
   hosts: "{{ all | default('control[0]') }}"
   connection: local
   gather_facts: false
-  tasks:
-    - name: "Get instance details"
-      ansible.builtin.include_role:
-        name: infra.leapp.snapshot
-        tasks_from: aws/get_instance_details
-
-    - name: Debug - instances_details via amazon.aws.ec2_instance_info
-      ansible.builtin.debug:
-        msg: "{{ instances_details.instances | selectattr('tags.os_major_version', 'defined') }}"
-
-    - name: Initialize list vars
-      ansible.builtin.set_fact:
-        # host_distribution_major_version: "{{ instances_details.instances | selectattr('tags.os_major_version', 'defined') | map(attribute='tags.os_major_version') }}"
-        host_distribution_major_version: "{{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='tags.os_major_version') }}"
-        host_short_name: "{{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='tags.short_name') }}"
-        host_ec2_instance_id: "{{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='instance_id') }}"
-
-    - name: Debug - host_distribution_major_version and host_ec2_instance_id and more
-      ansible.builtin.debug:
-        msg:
-          - "{{ host_distribution_major_version }}"
-          - "{{ host_short_name }}"
-          - "{{ host_ec2_instance_id }}"
-
-- name: Get instance ansible facts
-  hosts: "{{ rhel_inventory_group | default(omit) }}"
-  become: true
-  gather_facts: false
   vars:
-    ansible_python_interpreter: /usr/libexec/platform-python
+    instances: "{{ instances_template }}"
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
-    - name: Wait for connection...and gather facts
-      ansible.builtin.setup:
-        gather_timeout: 120
-      register: instance_facts
-      ignore_errors: true
-      until: "instance_facts is not failed"
-      retries: 10
-      delay: 10
+    - name: Set instance tag os_major_version based on survey
+      when: rhel_inventory_group != "ALL_rhel"
+      block:
+        - name: Set os_major_version tag for combination merge
+          ansible.builtin.set_fact:
+            instances_combine:
+              tags:
+                os_major_version: "{{ rhel_inventory_group | regex_replace('rhel') }}"
 
-    - name: Share instances_details facts from ansible-1 among all hosts
-      ansible.builtin.set_fact:
-        instances_details: "{{ hostvars['ansible-1']['instances_details'] }}"
-      run_once: true
+        - name: Combine instance extra_var tags with survey-based instance tag os_major_version
+          ansible.builtin.set_fact:
+            instances: "{{ instances_template | ansible.builtin.combine(instances_combine, recursive=true) }}"
 
-    - name: Debug - instances_details via amazon.aws.ec2_instance_info
-      ansible.builtin.debug:
-        msg:
-          - "host_distribution_major_version: {{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='tags.os_major_version') }}"
-          - "host_short_name: {{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='tags.short_name') }}"
-          - "host_ec2_instance_id: {{ instances_details.instances | selectattr('tags.os_major_version', 'equalto', rhel_inventory_group.split('rhel')[1]) | map(attribute='instance_id') }}"
-      run_once: true
+    - name: Set instance tag short_name based on survey
+      when: ripu_pet_name is defined
+      block:
+        - name: Set short_name tag for combination merge
+          ansible.builtin.set_fact:
+            instances_combine2:
+              tags:
+                short_name: "{{ ripu_pet_name }}"
 
-    - name: Debug - instance_facts via ansible
-      ansible.builtin.debug:
-        msg: "{{ instance_facts }}"
+        - name: Combine instance extra_var tags with survey-based instance tag short_name
+          ansible.builtin.set_fact:
+            instances: "{{ instances | ansible.builtin.combine(instances_combine2, recursive=true) }}"
+
+    - name: Get instance details
+      ansible.builtin.include_role:
+        name: heatmiser.ansible_snapshot.aws
+        tasks_from: instance/get_instance_details
+
+    - name: "Populate EC2 instance tags"
+      when: instances_details is not none
+      amazon.aws.ec2_tag:
+        region: "{{ ec2_region }}"
+        resource: "{{ item.0 }}"
+        state: present
+        tags:
+          os_major_version: "{{ item.1 | int + 1 }}"
+      with_together:
+        - "{{ instance_details.instances | map(attribute='instance_id') | list }}"
+        - "{{ instance_details.instances | map(attribute='tags.os_major_version') | list }}"
 ...

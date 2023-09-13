@@ -1,0 +1,17 @@
+---
+- name: Get volume details
+  hosts: "{{ 'control[0]' | default(omit) }}"
+  connection: local
+  gather_facts: false
+  environment:
+    ANSIBLE_SHOW_PER_HOST_START: "True"
+  tasks:
+    - name: "Get volume details"
+      ansible.builtin.include_role:
+        name: heatmiser.ansible_snapshot.aws
+        tasks_from: instance/get_volume_details
+
+    - name: Debug output - volume_details
+      ansible.builtin.debug:
+        msg: "{{ volume_details }}"
+...
