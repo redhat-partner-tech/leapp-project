@@ -18,4 +18,7 @@ collections:
 - name: https://github.com/heatmiser/ansible-snapshot.git
   type: git
   version: main
+- name: https://github.com/swapdisk/lvm_snapshots.git
+  type: git
+  version: main
 ...
