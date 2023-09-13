@@ -1,6 +1,6 @@
 ---
 - name: Scan host for facts
-  hosts: "{{ _hosts | default(omit) }}"
+  hosts: "{{ rhel_inventory_group | default(omit) }}"
   become: true
 
   tasks:
