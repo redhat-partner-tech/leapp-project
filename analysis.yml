@@ -1,6 +1,6 @@
 ---
 - name: Analysis
-  hosts: "{{ ripu_pet_name is defined | ternary( ripu_pet_name, rhel_inventory_group | default(omit) ) }}"
+  hosts: "{{ rhel_inventory_group | default(omit) }}"
   strategy: free
   gather_facts: true
   become: true
@@ -38,6 +38,7 @@
           - cockpit
           - cockpit-system
           - cockpit-leapp
+          - vdo
       when:
         - ansible_system_vendor == "Amazon EC2" or ansible_system_vendor == "Xen"
         - ansible_product_uuid|regex_search('^ec2') or ansible_product_uuid|regex_search('^EC2')
