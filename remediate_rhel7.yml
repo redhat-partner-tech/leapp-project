@@ -21,7 +21,7 @@
 - name: Remove pam_pkcs11 module # noqa command-instead-of-module
   ansible.builtin.shell: |
     set -o pipefail
-    leapp answer --section remove_pam_pkcs11_module_check.confirm=True
+    leapp answer --add --section remove_pam_pkcs11_module_check.confirm=True
   args:
     executable: /bin/bash
 
