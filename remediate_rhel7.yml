@@ -6,6 +6,12 @@
     delay: 5
     timeout: 300
 
+- name: Install leapp
+  ansible.builtin.package:
+    name: leapp
+    enablerepo: rhel-7-server-rhui-extras-rpms
+    state: latest
+
 - name: Define kernel modules to unload
   ansible.builtin.set_fact:
     kernel_modules_to_unload:
