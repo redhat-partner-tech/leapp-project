@@ -43,6 +43,64 @@
         - ansible_system_vendor == "Amazon EC2" or ansible_system_vendor == "Xen"
         - ansible_product_uuid|regex_search('^ec2') or ansible_product_uuid|regex_search('^EC2')
         - "'rhui' in yum_repolist.stdout"
-  roles:
-    - infra.leapp.analysis
+
+  tasks:
+    - name: Generate pre-upgrade report
+      ansible.builtin.import_role:
+        name: infra.leapp.analysis
+
+    - name: Get report file status
+      ansible.builtin.stat:
+        path: /var/log/leapp/leapp-report.json
+      register: report_file
+
+    - name: Log preupgrade report
+      when: report_file.stat.exists and splunk_hectoken is defined
+      block:
+        - name: Gather EC2 metadata facts
+          amazon.aws.ec2_metadata_facts:
+          delegate_to: localhost
+          become: false
+          ignore_errors: true
+          when: ansible_system_vendor == "Amazon EC2" or ansible_system_vendor == "Xen"
+
+        - name: Collect JSON report results
+          ansible.builtin.slurp:
+            src: /var/log/leapp/leapp-report.json
+          register: leapp_report
+
+        - name: Assemble payload for Splunk
+          ansible.builtin.set_fact:
+            splunk_payload:
+              sourcetype: _json
+              index: "{{ splunk_index }}"
+              event:
+                event_type: leapp_report
+                hostname: "{{ ansible_facts.hostname }}"
+                os_version: "{{ ansible_facts.distribution_version }}"
+                pet_app_env: "{{ ['Dev','Test','Prod'] | random(seed=ansible_facts.hostname) }}"
+                pet_app_team: "{{ ['Bird','Cat','Dog','Fish','Hamster','Lizard','Snake'] | random(seed=ansible_facts.hostname) }}"
+                region: "{{ ansible_ec2_placement_region | default('undefined') }}"
+                report: "{{ leapp_report.content | b64decode | from_json }}"
+
+        - name: Send event to Splunk
+          ansible.builtin.uri:
+            url: "{{ splunk_url }}"
+            headers:
+              Authorization: "Splunk {{ splunk_hectoken }}"
+            method: POST
+            body: "{{ splunk_payload }}"
+            body_format: json
+            return_content: true
+          delegate_to: localhost
+          become: false
+          changed_when: false
+          ignore_errors: true
+          register: splunk_send
+          no_log: true
+
+        - name: Show send result
+          ansible.builtin.debug:
+            var: splunk_send
+          when: splunk_send | default(false)
 ...
