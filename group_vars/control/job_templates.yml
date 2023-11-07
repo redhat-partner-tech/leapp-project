@@ -25,8 +25,7 @@ controller_templates:
     project: Project Leapp
     playbook: analysis.yml
     inventory: Workshop Inventory
-    credentials:
-      - Workshop Credential
+    credentials: "['Workshop Credential', {% if splunk_cred.id is defined %} 'Splunk Credential' {% endif %}]"
     survey_enabled: true
     survey:
       name: ''
@@ -50,8 +49,7 @@ controller_templates:
     project: Project Leapp
     playbook: upgrade.yml
     inventory: Workshop Inventory
-    credentials:
-      - Workshop Credential
+    credentials: "['Workshop Credential', {% if splunk_cred.id is defined %} 'Splunk Credential' {% endif %}]"
     survey_enabled: true
     survey:
       name: ''

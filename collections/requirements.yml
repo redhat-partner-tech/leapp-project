@@ -21,4 +21,7 @@ collections:
 - name: https://github.com/swapdisk/lvm_snapshots.git
   type: git
   version: main
+- name: awx.awx
+  version: 19.4.0
+  source: https://galaxy.ansible.com
 ...

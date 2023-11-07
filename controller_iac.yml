@@ -22,6 +22,12 @@
       ansible.builtin.set_fact:
         workshop_ec2_region: "{{ ansible_ec2_instance_identity_document_region }}"
 
+    - name: Lookup splunk credential
+      set_fact:
+        splunk_cred: "{{ lookup('awx.awx.controller_api', 'credentials', host=controller_hostname, verify_ssl=controller_validate_certs, query_params={'name': 'Splunk Credential'}, return_values=true) }}"
+      register: get_cred
+      until: get_cred is not failed
+
     - name: Configure controller from project group_vars
       ansible.builtin.include_role:
         name: "{{ controller_infra_vars }}"
