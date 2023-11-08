@@ -1,17 +1,10 @@
 ---
 - name: Apply all available package updates
-  hosts: "{{ ripu_pet_name is defined | ternary( ripu_pet_name, rhel_inventory_group | default(omit) ) }}"
-  # gather_facts: true
+  hosts: "all"
   gather_facts: false
   become: true
   strategy: free
   tasks:
-    # - name: Wait for connection...
-    #   ansible.builtin.wait_for_connection:
-    #     connect_timeout: 20
-    #     sleep: 5
-    #     delay: 5
-    #     timeout: 300
     - name: Wait for connection...and gather facts
       ansible.builtin.setup:
         gather_timeout: 60

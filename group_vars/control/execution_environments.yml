@@ -1,5 +1,0 @@
----
-controller_execution_environments:
-  - name: ripu workshop execution environment
-    image: registry.redhat.io/ansible-automation-platform-23/ee-supported-rhel8:1.0.0-208
-...
