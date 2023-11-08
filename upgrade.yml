@@ -32,6 +32,7 @@
                   event:
                     event_type: playbook_run
                     hostname: "{{ ansible_facts.hostname }}"
+                    job_id: "{{ awx_job_id | default('undefined') }}"
                     os_version: "{{ ansible_facts.distribution_version }}"
                     pet_app_env: "{{ ['Dev','Test','Prod'] | random(seed=ansible_facts.hostname) }}"
                     pet_app_team: "{{ ['Bird','Cat','Dog','Fish','Hamster','Lizard','Snake'] | random(seed=ansible_facts.hostname) }}"
