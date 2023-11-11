@@ -1,0 +1,30 @@
+---
+analysis_packages_el7:
+  - leapp-upgrade
+
+analysis_repos_el7:
+  - rhel-7-server-extras-rpms
+
+leapp_upgrade_type: satellite
+# leapp_upgrade_type: cdn
+# leapp_upgrade_type: rhui
+
+leapp_preupg_opts: "{{ '--no-rhsm' if leapp_upgrade_type == 'rhui' else '' }}"
+
+# Satellite Organization and Activation Keys are required if using Satellite to change content views
+# unless the content view already in use has all required repositories.
+# satellite_organization: Example
+# satellite_activation_key_pre_leapp: rhel{{ ansible_distribution_major_version }}
+# satellite_activation_key_leapp: rhel{{ ansible_distribution_major_version }}_leapp
+
+leapp_repos_enabled: []
+# leapp_repos_enabled:
+#   - satellite-client-6-for-rhel-{{ ansible_distribution_major_version | int + 1 }}-x86_64-rpms
+
+post_reboot_delay: 120
+
+os_path: $PATH
+
+async_timeout_maximum: 7200
+async_poll_interval: 60
+...

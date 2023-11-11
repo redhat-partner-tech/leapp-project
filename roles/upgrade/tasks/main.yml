@@ -1,0 +1,26 @@
+---
+# tasks file for upgrade
+- name: Initialize lock, logging, and common vars
+  ansible.builtin.import_role:
+    name: common
+  vars:
+    job_name: 'RIPU in-place OS upgrade'
+
+- name: Include tasks for leapp upgrade
+  ansible.builtin.include_tasks: leapp-upgrade.yml
+  when: ansible_distribution_major_version|int >= 7
+
+- name: Include post upgrade validation
+  ansible.builtin.include_tasks: upgrade-validation.yml
+
+- name: Include tasks for leapp post upgrade
+  ansible.builtin.include_tasks: leapp-post-upgrade.yml
+  when: ansible_facts.ansible_local.pre_ripu.distribution_major_version|int >= 7
+
+- name: Notify RIPU in-place OS upgrade is done handler
+  ansible.builtin.assert:
+    that: true
+    quiet: true
+  changed_when: true
+  notify: RIPU in-place OS upgrade is done
+...

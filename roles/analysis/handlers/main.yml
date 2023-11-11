@@ -1,0 +1,23 @@
+---
+# handlers file for analysis
+- name: Register to pre leapp activation key
+  community.general.redhat_subscription:
+    state: present
+    activationkey: "{{ satellite_activation_key_pre_leapp }}"
+    org_id: "{{ satellite_organization }}"
+    force_register: true
+
+- name: Remove lynx package
+  ansible.builtin.package:
+    name: lynx
+    state: absent
+
+# Keep this last so it's easy to find in the job output.
+- name: Preupgrade analysis report is done
+  ansible.builtin.debug:
+    msg: >-
+      The preupgrade analysis report generation is now complete.
+      {{ 'WARNING: Inhibitors' if upgrade_inhibited else 'SUCCESS: No inhibitors' }} found.
+      Review the result file at {{ result_filename }}.
+
+...

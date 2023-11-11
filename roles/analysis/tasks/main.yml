@@ -1,0 +1,36 @@
+---
+# tasks file for analysis
+- name: Initialize lock, logging, and common vars
+  ansible.builtin.import_role:
+    name: common
+  vars:
+    job_name: 'RIPU preupgrade analysis'
+
+- name: /etc/ansible/facts.d directory exists
+  ansible.builtin.file:
+    path: /etc/ansible/facts.d
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Capture current ansible_facts for validation after upgrade
+  ansible.builtin.copy:
+    content: "{{ ansible_facts | ansible.builtin.combine({'ansible_local': {}}) }}"
+    dest: /etc/ansible/facts.d/pre_ripu.fact
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Include tasks for leapp preupgrade analysis
+  ansible.builtin.include_tasks: analysis-leapp.yml
+  when: ansible_distribution_major_version|int >= 7
+
+- name: Notify analysis report is done handler
+  ansible.builtin.assert:
+    that: true
+    quiet: true
+  changed_when: true
+  notify: Preupgrade analysis report is done
+
+...

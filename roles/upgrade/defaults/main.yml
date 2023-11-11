@@ -1,0 +1,53 @@
+---
+# defaults file for upgrade
+leapp_upgrade_type: satellite
+# leapp_upgrade_type: cdn
+# leapp_upgrade_type: rhui
+# TODO: Add support for custom repositories?
+# leapp_upgrade_type: custom
+
+leapp_upgrade_opts: "{{ '--no-rhsm' if leapp_upgrade_type == 'rhui' else '' }}"
+
+leapp_repos_enabled: []
+# leapp_repos_enabled:
+#   - satellite-client-6-for-rhel-{{ ansible_distribution_major_version | int + 1 }}-x86_64-rpms
+
+rhel_7_network_install_repo_url: http://capsule1.example.com/pub/ISO/RHEL7.9
+
+# Satellite Organization and Activation Keys are required if using Satellite to change content views
+# unless the content view already in use has all required repositories.
+# satellite_organization: Example
+# satellite_activation_key_post_leapp: rhel{{ ansible_distribution_major_version }}_prod
+
+# Desired selinux mode post Leapp upgrade.
+# selinux_mode: enforcing
+# selinux_mode: permissive
+# selinux_mode: disabled
+# Default selinux_mode to what was found during the pre-upgrade analysis automation.
+# The config_mode fact is not created if selinux is disabled so default the variable to "disabled"
+selinux_mode: "{{ ansible_facts.ansible_local.pre_ripu.selinux.config_mode | default('disabled') }}"
+
+# System-wide cryptographic policies
+# set_crypto_policies: false
+set_crypto_policies: true
+crypto_policy: DEFAULT
+# crypto_policy: FUTURE
+# crypto_policy: DEFAULT:SHA1
+
+# Whether or not to update from legacy grub to grub2 in post-upgrade steps from RHEL 6 -> 7.
+update_grub_to_grub_2: false
+
+# Used by grub to grub2 upgrade in RHEL 6 to 7 post upgrade, and RHEL 7 to 8 post upgrade.
+# For grub to grub2 upgrade, if grub_boot_device is not defined, the parent device of /boot
+# will be used if present, else the parent device of / will be used.
+# For RHEL 7 to 8 post upgrade, used to grub2-install on a device other than the disk
+# /boot is on.
+# grub_boot_device: /dev/sda
+
+post_reboot_delay: 120
+
+os_path: $PATH
+
+async_timeout_maximum: 7200
+async_poll_interval: 60
+...

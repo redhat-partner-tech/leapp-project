@@ -1,0 +1,60 @@
+---
+- name: Register to leapp activation key
+  community.general.redhat_subscription:
+    state: present
+    activationkey: "{{ satellite_activation_key_leapp }}"
+    org_id: "{{ satellite_organization }}"
+    force_register: true
+  notify: Register to pre leapp activation key
+  when:
+    - leapp_upgrade_type == 'satellite'
+    - satellite_organization is defined
+    - satellite_activation_key_leapp is defined
+
+- name: Install packages for preupgrade analysis on RHEL 7
+  ansible.builtin.package:
+    name: "{{ analysis_packages_el7 }}"
+    enablerepo: "{{ analysis_repos_el7 }}"
+    state: latest
+  when: ansible_distribution_major_version|int == 7
+
+- name: Ensure leapp log directory exists
+  ansible.builtin.file:
+    path: /var/log/leapp
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Populate leapp_answers file
+  ansible.builtin.copy:
+    content: "{{ leapp_answerfile }}"
+    dest: /var/log/leapp/answerfile
+    owner: root
+    group: root
+    mode: '0644'
+  when: leapp_answerfile is defined
+
+- name: Leapp preupgrade report
+  ansible.builtin.shell: >
+    export PATH={{ os_path }}
+    set -o pipefail;
+    leapp preupgrade
+    {{ leapp_preupg_opts }}
+    {{ leapp_enable_repos_args }}
+    2>&1 | tee -a {{ log_file }}
+  register: leapp
+  args:
+    executable: /bin/bash
+  async: "{{ async_timeout_maximum | int }}"
+  poll: "{{ async_poll_interval | int }}"
+  failed_when: "'report has been generated' not in leapp.stdout"
+
+- name: Include check-results-file.yml
+  ansible.builtin.include_tasks: check-results-file.yml
+
+- name: Include the parse_leapp_report role to check for inhibitors
+  ansible.builtin.include_role:
+    name: parse_leapp_report
+
+...
