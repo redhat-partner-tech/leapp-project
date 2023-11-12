@@ -18,6 +18,17 @@
     state: latest
   when: ansible_distribution_major_version|int == 7
 
+- name: enable the repository
+  ansible.builtin.shell: sudo subscription-manager repos --enable={{ analysis_repos_el7 }}
+  when: ansible_distribution_major_version|int == 7
+
+- name: install the leap utility
+  ansible.builtin.package::
+    name: "{{ analysis_packages_el7 }}"
+    state: latest
+  become: true
+  when: ansible_distribution_major_version|int == 7
+
 - name: Ensure leapp log directory exists
   ansible.builtin.file:
     path: /var/log/leapp
