@@ -11,22 +11,14 @@
     - satellite_organization is defined
     - satellite_activation_key_leapp is defined
 
-- name: Install packages for preupgrade analysis on RHEL 7
-  ansible.builtin.package:
-    name: "{{ analysis_packages_el7 }}"
-    enablerepo: "{{ analysis_repos_el7 }}"
-    state: latest
-  when: ansible_distribution_major_version|int == 7
-
 - name: enable the repository
   ansible.builtin.shell: sudo subscription-manager repos --enable={{ analysis_repos_el7 }}
   when: ansible_distribution_major_version|int == 7
 
 - name: install the leap utility
-  ansible.builtin.yum::
+  ansible.builtin.package::
     name: "{{ analysis_packages_el7 }}"
     state: latest
-  become: true
   when: ansible_distribution_major_version|int == 7
 
 - name: Ensure leapp log directory exists
