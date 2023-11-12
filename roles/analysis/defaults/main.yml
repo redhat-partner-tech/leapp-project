@@ -1,9 +1,7 @@
 ---
-analysis_packages_el7:
-  - leapp-upgrade
+analysis_packages_el7: leapp-upgrade
 
-analysis_repos_el7:
-  - rhel-7-server-extras-rpms
+analysis_repos_el7: rhel-7-server-extras-rpms
 
 leapp_upgrade_type: satellite
 # leapp_upgrade_type: cdn
