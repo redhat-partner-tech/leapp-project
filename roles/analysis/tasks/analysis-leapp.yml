@@ -16,7 +16,7 @@
   when: ansible_distribution_major_version|int == 7
 
 - name: install the leap utility
-  ansible.builtin.package::
+  ansible.builtin.package:
     name: "{{ analysis_packages_el7 }}"
     state: latest
   when: ansible_distribution_major_version|int == 7
@@ -40,7 +40,7 @@
 
 - name: Leapp preupgrade report
   ansible.builtin.shell: >
-    export PATH={{ os_path }}
+    export PATH={{ os_path }};
     set -o pipefail;
     leapp preupgrade
     {{ leapp_preupg_opts }}
@@ -59,5 +59,3 @@
 - name: Include the parse_leapp_report role to check for inhibitors
   ansible.builtin.include_role:
     name: parse_leapp_report
-
-...
