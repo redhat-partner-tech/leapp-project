@@ -12,7 +12,7 @@
     - satellite_activation_key_leapp is defined
 
 - name: enable the repository
-  ansible.builtin.shell: sudo subscription-manager repos --enable={{ analysis_repos_el7 }}
+  ansible.builtin.shell: subscription-manager repos --enable={{ analysis_repos_el7 }}
   when: ansible_distribution_major_version|int == 7
 
 - name: install the leap utility
