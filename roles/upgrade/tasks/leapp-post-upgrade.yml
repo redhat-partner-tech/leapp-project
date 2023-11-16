@@ -57,29 +57,8 @@
   ansible.builtin.debug:
     var: result
 
-- name: Unset subscription-manager release
-  ansible.builtin.shell: >
-    export PATH={{ os_path }};
-    subscription-manager release --unset
-  when: leapp_upgrade_type == 'satellite' or leapp_upgrade_type == 'cdn'
-
-# TODO: Unset rhui release.
-
-- name: "Register to post leapp activation key"
-  community.general.redhat_subscription:
-    state: present
-    activationkey: "{{ satellite_activation_key_post_leapp }}"
-    org_id: "{{ satellite_organization }}"
-    force_register: true
-  when:
-    - leapp_upgrade_type == 'satellite'
-    - satellite_organization is defined
-    - satellite_activation_key_post_leapp is defined
-
 - name: Include update-and-reboot.yml
   ansible.builtin.include_tasks: update-and-reboot.yml
-
-# TODO: Validate RHEL OS versions again?
 
 # Only found in RHEL 7 to 8 documentation
 - name:  Old kernels have been removed from the bootloader entry for RHEL 7 to 8
@@ -94,7 +73,4 @@
 - name: Include tasks for leapp post upgrade selinux
   ansible.builtin.include_tasks: leapp-post-upgrade-selinux.yml
 
-- name: Include tasks for leapp post upgrade crypto policies
-  ansible.builtin.include_tasks: leapp-post-upgrade-crypto.yml
-  when: set_crypto_policies
 ...

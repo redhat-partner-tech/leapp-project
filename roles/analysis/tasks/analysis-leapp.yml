@@ -5,7 +5,7 @@
     activationkey: "{{ satellite_activation_key_leapp }}"
     org_id: "{{ satellite_organization }}"
     force_register: true
-  notify: Register to pre leapp activation key
+#  notify: Register to pre leapp activation key
   when:
     - leapp_upgrade_type == 'satellite'
     - satellite_organization is defined
@@ -43,7 +43,7 @@
   ansible.builtin.shell: >
     export PATH={{ os_path }};
     set -o pipefail;
-    leapp preupgrade
+    leapp preupgrade --target {{ version }}
     {{ leapp_preupg_opts }}
     {{ leapp_enable_repos_args }}
     2>&1 | tee -a {{ log_file }}

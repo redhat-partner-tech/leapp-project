@@ -17,6 +17,10 @@
   ansible.builtin.include_tasks: leapp-post-upgrade.yml
   when: ansible_facts.ansible_local.pre_ripu.distribution_major_version|int >= 7
 
+- name: performing the custom post configutations
+  ansible.builtin.include_tasks: motd-services.yml
+  when: ansible_facts.ansible_local.pre_ripu.distribution_major_version|int >= 7
+
 - name: Notify RIPU in-place OS upgrade is done handler
   ansible.builtin.assert:
     that: true

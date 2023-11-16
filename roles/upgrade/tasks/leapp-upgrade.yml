@@ -8,17 +8,6 @@
     that: not upgrade_inhibited
     msg: Inhibitors found, please investigate and rerun analysis.
 
-- name: Register to leapp activation key
-  community.general.redhat_subscription:
-    state: present
-    activationkey: "{{ satellite_activation_key_leapp }}"
-    org_id: "{{ satellite_organization }}"
-    force_register: true
-  when:
-    - leapp_upgrade_type == 'satellite'
-    - satellite_organization is defined
-    - satellite_activation_key_leapp is defined
-
 - name: Include update-and-reboot.yml
   ansible.builtin.include_tasks: update-and-reboot.yml
 
@@ -26,7 +15,7 @@
   ansible.builtin.shell: >
     export PATH={{ os_path }};
     set -o pipefail;
-    leapp upgrade
+    leapp upgrade --taget {{ version }}
     {{ leapp_upgrade_opts }}
     {{ leapp_enable_repos_args }}
     2>&1 | tee -a {{ log_file }}

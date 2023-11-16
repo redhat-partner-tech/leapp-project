@@ -1,0 +1,34 @@
+---
+- name: Check if the line exists in /tmp/test
+  shell: cat /tmp/test
+  register: pam_sshd_content
+  changed_when: false
+
+- name: Comment out the line if it exists
+  lineinfile:
+    path: /tmp/test
+    regexp: '^session\s+optional\s+pam_motd.so'
+    line: '# session    optional     pam_motd.so'
+  when: pam_sshd_content.stdout.find('session    optional     pam_motd.so') != -1
+
+- name: Enable and start sysstat-collect.timer
+  systemd:
+    name: sysstat-collect.timer
+    enabled: yes
+    state: started
+
+- name: Enable and start sysstat-summary.timer
+  systemd:
+    name: sysstat-summary.timer
+    enabled: yes
+    state: started
+
+- name: Check and restart sysstat service
+  systemd:
+    name: sysstat
+    state: restarted
+  register: sysstat_status
+
+- name: Display sysstat service status
+  debug:
+    var: sysstat_status.stdout_lines

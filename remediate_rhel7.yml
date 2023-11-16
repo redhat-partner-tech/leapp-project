@@ -32,8 +32,26 @@
     line: "{{ item.key }} {{ item.value }}"
     state: present
   loop:
-    - {key: "PermitRootLogin", value: "prohibit-password"}
-    - {key: "PasswordAuthentication", value: "no"}
+    - { key: "PermitRootLogin", value: "prohibit-password" }
+    - { key: "PasswordAuthentication", value: "no" }
   notify:
     - Restart sshd
+
+- name: Enable yum plugins globally in /etc/yum.conf
+  ansible.builtin.lineinfile:
+    path: /etc/yum.conf
+    line: 'plugins=1'
+    regexp: '^plugins='
+
+- name: Enable yum plugins individually in /etc/yum/pluginconf.d/
+  ansible.builtin.lineinfile:
+    path: "{{ item.file }}"
+    line: 'enabled=1'
+    regexp: '^enabled='
+  loop:
+    - { file: '/etc/yum/pluginconf.d/subscription-manager.conf' }
+    - { file: '/etc/yum/pluginconf.d/production.conf' }
+
+- name: Execute chattr command
+  ansible.builtin.command: chattr -i /boot/grub2/grub.cfg
 ...
