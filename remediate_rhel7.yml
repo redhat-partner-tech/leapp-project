@@ -54,4 +54,7 @@
 
 - name: Execute chattr command
   ansible.builtin.command: chattr -i /boot/grub2/grub.cfg
+
+- name: Execute chattr command
+  ansible.builtin.command: chattr -i /etc/passwd
 ...
