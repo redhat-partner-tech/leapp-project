@@ -43,14 +43,20 @@
     line: 'plugins=1'
     regexp: '^plugins='
 
-- name: Enable yum plugins individually in /etc/yum/pluginconf.d/
-  ansible.builtin.lineinfile:
-    path: "{{ item.file }}"
-    line: 'enabled=1'
-    regexp: '^enabled='
-  loop:
-    - { file: '/etc/yum/pluginconf.d/subscription-manager.conf' }
-    - { file: '/etc/yum/pluginconf.d/production.conf' }
+- name: Read the subscription-manager.conf file
+  shell: cat /etc/yum/pluginconf.d/subscription-manager.conf
+  register: file_content
+
+- name: Check if enable=1 is present in the file
+  set_fact:
+    enable_present: "{{ file_content.stdout | regex_search('enable=1') }}"
+
+- name: Replace enable=0 with enable=1 if not present
+  replace:
+    path: /etc/yum/pluginconf.d/subscription-manager.conf
+    regexp: 'enable=0'
+    replace: 'enable=1'
+  when: not enable_present
 
 - name: Execute chattr command
   ansible.builtin.command: chattr -i /boot/grub2/grub.cfg
