@@ -38,10 +38,17 @@
           - cockpit
           - cockpit-system
           - cockpit-leapp
+          - vdo
       when:
         - ansible_system_vendor == "Amazon EC2" or ansible_system_vendor == "Xen"
         - ansible_product_uuid|regex_search('^ec2') or ansible_product_uuid|regex_search('^EC2')
         - "'rhui' in yum_repolist.stdout"
   roles:
     - infra.leapp.analysis
+  tasks:
+    - name: Confirm check_vdo True in leapp answerfile
+      ansible.builtin.replace:
+        path: /var/log/leapp/answerfile
+        regexp: '(\[check_vdo\][^<]*)\#\ confirm\ \='
+        replace: '\1confirm\ \=\ True'
 ...
