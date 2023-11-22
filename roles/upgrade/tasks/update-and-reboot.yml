@@ -1,6 +1,6 @@
 ---
 - name: Ensure all updates are applied
-  ansible.builtin.package:
+  ansible.builtin.yum:
     name: '*'
     state: latest
   register: updates_available
