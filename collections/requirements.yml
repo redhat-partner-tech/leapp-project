@@ -20,5 +20,5 @@ collections:
   version: main
 - name: https://github.com/swapdisk/lvm_snapshots.git
   type: git
-  version: main
+  version: 1.0.3
 ...
