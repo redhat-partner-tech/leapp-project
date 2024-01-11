@@ -5,6 +5,7 @@
   vars:
     controller_infra_workloads:
       - infra.controller_configuration.projects
+      - infra.controller_configuration.project_update
       - infra.controller_configuration.execution_environments
       - infra.controller_configuration.inventories
       - infra.controller_configuration.inventory_sources
@@ -23,9 +24,10 @@
         workshop_ec2_region: "{{ ansible_ec2_instance_identity_document_region }}"
 
     - name: Configure controller from project group_vars
-      ansible.builtin.include_role:
-        name: "{{ controller_infra_vars }}"
+      ansible.builtin.include_tasks: controller_iac_subtasks_init.yml
       loop: "{{ controller_infra_workloads }}"
       loop_control:
         loop_var: controller_infra_vars
+      when:
+        - controller_infra_workloads | d("") | length >0
 ...
