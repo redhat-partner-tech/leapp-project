@@ -1,0 +1,28 @@
+---
+- name: Extend partition and resize physical volume
+  hosts: "{{ rhel_inventory_group | default(omit) }}"
+  strategy: free
+  gather_facts: true
+  become: true
+  vars:
+    perform_resize: false
+  tasks:
+    - name: Read storage device information (always use unit when probing)
+      community.general.parted:
+        device: "{{ full_storage_device_name }}"
+        unit: MiB
+      register: storage_device_info
+
+    - name: "{{ full_storage_device_name }}" device information
+      ansible.builtin.debug:
+        var: storage_device_info
+
+    - name: Extend an existing partition to fill all available space
+      community.general.parted:
+        device: "{{ full_storage_device_name }}"
+        number: "{{ storage_device_info.partitions | length }}"
+        part_end: "100%"
+        resize: true
+        state: present
+      when: perform_resize
+...
