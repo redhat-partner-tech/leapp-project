@@ -26,7 +26,9 @@
     - name: Resize physical volume to utilize all available space
       ansible.builtin.command: >-
         pvresize {{ full_storage_device_name }}p{{ storage_device_info.partitions | length }}
-      when: '"CHANGED" in growpart_output.stdout'
+      when:
+        - '"CHANGED" in growpart_output.stdout'
+        - perform_resize
       register: pvresize_output
 
     - name: Validate partition and physical volume resized
