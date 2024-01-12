@@ -18,11 +18,22 @@
         var: storage_device_info
 
     - name: Extend existing partition to fill all available space on device
-      community.general.parted:
-        device: "{{ full_storage_device_name }}"
-        number: "{{ storage_device_info.partitions | length }}"
-        part_end: "100%"
-        resize: true
-        state: present
+      ansible.builtin.command: >-
+        growpart {{ full_storage_device_name }} {{ storage_device_info.partitions | length }}
       when: perform_resize
+      register: growpart_output
+
+    - name: Resize physical volume to utilize all available space
+      ansible.builtin.command: >-
+        pvresize {{ full_storage_device_name }}p{{ storage_device_info.partitions | length }}
+      when: '"CHANGED" in growpart_output.stdout'
+      register: pvresize_output
+
+    - name: Validate partition and physical volume resized
+      ansible.builtin.assert:
+        that:
+          - 'full_storage_device_name ~ "p" ~ storage_device_info.partitions | length in pvresize_output.stdout'
+          - '"changed" in pvresize_output.stdout'
+        fail_msg: Failed to resize {{ full_storage_device_name }} partition {{ storage_device_info.partitions | length }} and physical volume {{ full_storage_device_name }}p{{ storage_device_info.partitions | length }}.
+        success_msg: Resized {{ full_storage_device_name }} partition {{ storage_device_info.partitions | length }} and physical volume {{ full_storage_device_name }}p{{ storage_device_info.partitions | length }}.
 ...
