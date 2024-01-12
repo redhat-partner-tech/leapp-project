@@ -2,4 +2,8 @@
 controller_inventories:
   - name: Workshop Inventory
     organization: Default
+
+  - name: Demo Inventory
+    organization: Default
+    state: absent
 ...
