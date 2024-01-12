@@ -13,11 +13,11 @@
         unit: MiB
       register: storage_device_info
 
-    - name: "{{ full_storage_device_name }}" device information
+    - name: "{{ full_storage_device_name }} device information"
       ansible.builtin.debug:
         var: storage_device_info
 
-    - name: Extend an existing partition to fill all available space
+    - name: Extend existing partition to fill all available space on device
       community.general.parted:
         device: "{{ full_storage_device_name }}"
         number: "{{ storage_device_info.partitions | length }}"
