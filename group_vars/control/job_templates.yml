@@ -262,4 +262,31 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
+  - name: UTILITY / Extend partition and resize physical volume
+    project: Project Leapp
+    playbook: partition_lvm_resize.yml
+    inventory: Workshop Inventory
+    credentials:
+      - Workshop Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - ALL_rhel
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
+    ask_limit_on_launch: true
+    extra_vars:
+      full_storage_device_name: /dev/nvme0n1
+      perform_resize: true
+
+  - name: Demo Job Template
+    state: absent
 ...
