@@ -1,12 +1,23 @@
 ---
-- name: Create/revert/remove LVM snapshot of node
+- name: Create/revert/remove/check LVM snapshots of node
   hosts: "{{ rhel_inventory_group | default(omit) }}"
   become: yes
   environment:
     LANG: en_US.UTF-8
     LC_ALL: en_US.UTF-8
     TERM: linux
-  roles:
-    - name: infra.lvm_snapshots.lvm_snapshots
-      # lvm_snapshot_* vars provided via AAP2 job template and associated surveys
+  tasks:
+    - name: "Execute snapshot check"
+      ansible.builtin.include_role:
+        name: "infra.lvm_snapshots.snapshot_create"
+          # snapshot_* vars provided via AAP2 job template and associated surveys
+      vars:
+        snapshot_create_check_only: true
+      when: lvm_snapshots_action == "check"
+
+    - name: "Execute snapshot {{ lvm_snapshots_action }}"
+      ansible.builtin.include_role:
+        name: "infra.lvm_snapshots.snapshot_{{ lvm_snapshots_action }}"
+          # snapshot_* vars provided via AAP2 job template and associated surveys
+      when: (lvm_snapshots_action == "create") or (lvm_snapshots_action == "remove") or (lvm_snapshots_action == "revert")
 ...
