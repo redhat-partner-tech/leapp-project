@@ -17,6 +17,19 @@
       ansible.builtin.debug:
         var: storage_device_info
 
+    - name: "Add up partition sizes"
+      ansible.builtin.set_fact:
+        total_partitions_size: "{{ total_partitions_size | default(0) | int + item.size | int }}"
+      loop: "{{ storage_device_info.partitions }}"
+      loop_control:
+        label: "{{ item.num }}"
+
+    - name: "Compare total_partitions_size to storage_device_info.disk.size"
+      ansible.builtin.debug:
+        msg:
+          - "storage_device_info.disk.size: {{ storage_device_info.disk.size }}"
+          - "total_partitions_size: {{ total_partitions_size }}"
+
     - name: Extend existing partition to fill all available space on device
       ansible.builtin.command: >-
         growpart {{ full_storage_device_name }} {{ storage_device_info.partitions | length }}
