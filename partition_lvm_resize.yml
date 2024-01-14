@@ -7,7 +7,7 @@
   vars:
     perform_resize: false
   tasks:
-    - name: Read storage device information (always use unit when probing)
+    - name: "Read {{ full_storage_device_name }} storage device information (always use unit when probing)"
       community.general.parted:
         device: "{{ full_storage_device_name }}"
         unit: MiB
@@ -17,18 +17,19 @@
       ansible.builtin.debug:
         var: storage_device_info
 
-    - name: "Add up partition sizes"
+    - name: "Calculate total partition usage on {{ full_storage_device_name }}"
       ansible.builtin.set_fact:
         total_partitions_size: "{{ total_partitions_size | default(0) | int + item.size | int }}"
       loop: "{{ storage_device_info.partitions }}"
       loop_control:
         label: "{{ item.num }}"
 
-    - name: "Compare total_partitions_size to storage_device_info.disk.size"
-      ansible.builtin.debug:
-        msg:
-          - "storage_device_info.disk.size: {{ storage_device_info.disk.size }}"
-          - "total_partitions_size: {{ total_partitions_size }}"
+    - name: "Validate total partition usage on {{ full_storage_device_name }} is less than total device size"
+      ansible.builtin.assert:
+        that:
+          - 'total_partitions_size | int + 1 < storage_device_info.disk.size'
+        fail_msg: Total partition usage on {{ full_storage_device_name }} equals total size of the device.
+        success_msg: Total partition usage on {{ full_storage_device_name }} is less than total size of the device.
 
     - name: Extend existing partition to fill all available space on device
       ansible.builtin.command: >-
