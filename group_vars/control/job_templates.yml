@@ -120,7 +120,7 @@ controller_templates:
     credentials:
       - Workshop Credential
     extra_vars:
-      snapshot_create_set_name: ripu01
+      snapshot_set_name: ripu01
       snapshot_create_snapshot_autoextend_threshold: 70
       snapshot_create_snapshot_autoextend_percent: 20
       snapshot_create_boot_backup: true
@@ -169,9 +169,9 @@ controller_templates:
     credentials:
       - Workshop Credential
     extra_vars:
-      lvm_snapshots_set_name: ripu01
+      snapshot_set_name: ripu01
+      snapshot_create_boot_backup: true
       lvm_snapshots_action: revert
-      lvm_snapshots_boot_backup: true
     survey_enabled: true
     survey:
       name: ''
