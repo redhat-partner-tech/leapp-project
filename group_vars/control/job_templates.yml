@@ -283,6 +283,7 @@ controller_templates:
             - rhel9
           required: true
     ask_limit_on_launch: true
+    ask_variables_on_launch: true
     extra_vars:
       full_storage_device_name: /dev/nvme0n1
       perform_resize: true
