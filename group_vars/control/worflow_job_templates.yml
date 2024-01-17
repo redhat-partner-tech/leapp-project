@@ -96,4 +96,52 @@ controller_workflows:
         all_parents_must_converge: false
         type: inventory_source
         success_nodes: []
+  - name: Z / SETUP / Workshop deployment
+    description: Workflow for workshop deployment
+    extra_vars:
+      lvm_snapshots_action: check
+    inventory: Workshop Inventory
+    state: present
+    organization: Default
+    survey_enabled: false
+    simplified_workflow_nodes:
+      - identifier: Z / SETUP / Cockpit - Web Console
+        unified_job_template: Z / SETUP / Cockpit - Web Console
+        organization: Default
+        all_parents_must_converge: false
+        success_nodes:
+          - OS / Patch OS to latest
+      - identifier: EC2 Dynamic Source - rhel7
+        unified_job_template: EC2 Dynamic Source - rhel7
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        success_nodes:
+          - EC2 Dynamic Source - rhel8
+      - identifier: EC2 Dynamic Source - rhel8
+        unified_job_template: EC2 Dynamic Source - rhel8
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        success_nodes:
+          - EC2 Dynamic Source - rhel9
+      - identifier: EC2 Dynamic Source - rhel9
+        unified_job_template: EC2 Dynamic Source - rhel9
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        success_nodes:
+          - EC2 Dynamic Source - ALL_rhel
+      - identifier: EC2 Dynamic Source - ALL_rhel
+        unified_job_template: EC2 Dynamic Source - ALL_rhel
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        success_nodes: OS / Patch OS to latest
+      - identifier: OS / Patch OS to latest
+        unified_job_template: OS / Patch OS to latest
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        success_nodes: []      
 ...
