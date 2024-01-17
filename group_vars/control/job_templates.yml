@@ -234,7 +234,6 @@ controller_templates:
     project: Project Leapp
     playbook: set_instance_tags.yml
     inventory: Workshop Inventory
-    limit: ansible-1
     credentials:
       - Workshop Credential
     survey_enabled: true
@@ -251,10 +250,6 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
-        - question_name: Enter server name - Leave blank to target all
-          type: text
-          variable: ripu_pet_name
-          required: false
     extra_vars:
       ec2_region: "{{ workshop_ec2_region }}"
       instances_template:
@@ -262,6 +257,7 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
+    ask_limit_on_launch: true
   - name: UTILITY / Extend partition and resize physical volume
     project: Project Leapp
     playbook: partition_lvm_resize.yml

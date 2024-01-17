@@ -88,5 +88,12 @@ controller_workflows:
         organization: Default
         all_parents_must_converge: false
         type: inventory_source
+        success_nodes:
+          - EC2 Dynamic Source - ALL_rhel
+      - identifier: EC2 Dynamic Source - ALL_rhel
+        unified_job_template: EC2 Dynamic Source - ALL_rhel
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
         success_nodes: []
 ...
