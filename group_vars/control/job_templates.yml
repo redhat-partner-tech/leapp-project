@@ -283,6 +283,20 @@ controller_templates:
     extra_vars:
       full_storage_device_name: /dev/nvme0n1
       perform_resize: true
+  - name: Z/ SETUP / Cockpit - Web Console
+    description: Install and configure Cockpit Web Console for all nodes
+    project: Project Leapp
+    playbook: controller_cockpit_setup.yml
+    inventory: Workshop Inventory
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      ec2_region: "{{ workshop_ec2_region }}"
+      instances:
+        tags:
+          Workshop: "{{ lookup('env', 'AWX_HOST' ).split('.')[1] }}"
+      student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
+      workshop_dns_zone: "{{ lookup('env', 'AWX_HOST').split('.',2)[2] }}"
 
   - name: Demo Job Template
     state: absent
