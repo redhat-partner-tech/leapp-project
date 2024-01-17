@@ -143,5 +143,5 @@ controller_workflows:
         all_parents_must_converge: true
         type: inventory_source
         extra_data:
-          - rhel_inventory_group: "rhel7"
+          rhel_inventory_group: "rhel7"
 ...
