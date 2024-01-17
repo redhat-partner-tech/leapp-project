@@ -1,0 +1,47 @@
+---
+- name: Wait for connection...
+  ansible.builtin.wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 300
+
+# Thanks! https://stackoverflow.com/questions/55844981/ansible-insert-word-in-grub-cmdline
+- name: Check if GRUB_SERIAL_COMMAND is configured in /etc/default/grub
+  ansible.builtin.lineinfile:
+    backup: true
+    path: /etc/default/grub
+    regexp: '^GRUB_SERIAL_COMMAND=".*'
+    state: absent
+  check_mode: true
+  register: grub_serial_command_check
+  changed_when: false
+
+- name: Insert 'serial --speed=115200' if missing
+  lineinfile:
+    backrefs: true
+    path: /etc/default/grub
+    regexp: "^(GRUB_SERIAL_COMMAND=\".*)\"$"
+    line: '\1 serial --speed=115200"'
+  when: grub_serial_command_check.found == 0
+  notify: Rebuild grub.cfg
+
+- name: Check if GRUB_TERMINAL is configured in /etc/default/grub
+  ansible.builtin.lineinfile:
+    backup: true
+    path: /etc/default/grub
+    regexp: '^GRUB_TERMINAL=".*'
+    state: absent
+  check_mode: true
+  register: grub_terminal_command_check
+  changed_when: false
+
+- name: Insert 'serial console' if missing
+  ansible.builtin.lineinfile:
+    backrefs: true
+    path: /etc/default/grub
+    regexp: "^(GRUB_TERMINAL=\".*)\"$"
+    line: '\1 serial console"'
+  when: grub_terminal_command_check.found == 0
+  notify: Rebuild grub.cfg
+...
