@@ -136,7 +136,7 @@ controller_workflows:
         organization: Default
         all_parents_must_converge: false
         type: inventory_source
-        success_nodes: OS / Patch OS to latest
+        success_nodes: OS / Patch OS to latest - rhel7
       - identifier: OS / Patch OS to latest - rhel7
         unified_job_template: OS / Patch OS to latest
         organization: Default
