@@ -104,40 +104,40 @@ controller_workflows:
     organization: Default
     survey_enabled: false
     simplified_workflow_nodes:
-      - identifier: Z / SETUP / Cockpit - Web Console
+      - identifier: node001
         unified_job_template: Z / SETUP / Cockpit - Web Console
         organization: Default
         all_parents_must_converge: false
         success_nodes:
-          - OS / Patch OS to latest
-      - identifier: EC2 Dynamic Source - rhel7
+          - node201
+      - identifier: node101
         unified_job_template: EC2 Dynamic Source - rhel7
         organization: Default
         all_parents_must_converge: false
         type: inventory_source
         success_nodes:
-          - EC2 Dynamic Source - rhel8
-      - identifier: EC2 Dynamic Source - rhel8
+          - node102
+      - identifier: node102
         unified_job_template: EC2 Dynamic Source - rhel8
         organization: Default
         all_parents_must_converge: false
         type: inventory_source
         success_nodes:
-          - EC2 Dynamic Source - rhel9
-      - identifier: EC2 Dynamic Source - rhel9
+          - node103
+      - identifier: node103
         unified_job_template: EC2 Dynamic Source - rhel9
         organization: Default
         all_parents_must_converge: false
         type: inventory_source
         success_nodes:
-          - EC2 Dynamic Source - ALL_rhel
-      - identifier: EC2 Dynamic Source - ALL_rhel
+          - node104
+      - identifier: node104
         unified_job_template: EC2 Dynamic Source - ALL_rhel
         organization: Default
         all_parents_must_converge: false
         type: inventory_source
-        success_nodes: OS / Patch OS to latest - rhel7
-      - identifier: OS / Patch OS to latest - rhel7
+        success_nodes: node201
+      - identifier: node201
         unified_job_template: OS / Patch OS to latest
         organization: Default
         all_parents_must_converge: true
