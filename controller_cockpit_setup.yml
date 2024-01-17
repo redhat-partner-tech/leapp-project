@@ -9,10 +9,10 @@
     - ansible.builtin.set_fact:
         workshop_ec2_region: "{{ ansible_ec2_instance_identity_document_region }}"
 
-    - name: "Get instance details"
-      ansible.builtin.import_role:
-        name: ec2_node_tools
-        tasks_from: get_instance_details
+    - name: Get instance details
+      ansible.builtin.include_role:
+        name: heatmiser.ansible_snapshot.aws
+        tasks_from: instance/get_instance_details
 
     - name: Grab ec2_instance_info for node1
       amazon.aws.ec2_instance_info:
