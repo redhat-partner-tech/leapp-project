@@ -24,7 +24,7 @@
         workshop_ec2_region: "{{ ansible_ec2_instance_identity_document_region }}"
 
     - name: Configure controller from project group_vars
-      ansible.builtin.include_tasks: controller_iac_subtasks_init.yml
+      ansible.builtin.include_tasks: controller_cac_subtasks_init.yml
       loop: "{{ controller_infra_workloads }}"
       loop_control:
         loop_var: controller_infra_vars
