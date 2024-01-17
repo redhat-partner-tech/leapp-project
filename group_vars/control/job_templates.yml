@@ -283,7 +283,7 @@ controller_templates:
     extra_vars:
       full_storage_device_name: /dev/nvme0n1
       perform_resize: true
-  - name: Z/ SETUP / Cockpit - Web Console
+  - name: Z / SETUP / Cockpit - Web Console
     description: Install and configure Cockpit Web Console for all nodes
     project: Project Leapp
     playbook: controller_cockpit_setup.yml
