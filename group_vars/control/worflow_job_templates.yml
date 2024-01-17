@@ -98,8 +98,7 @@ controller_workflows:
         success_nodes: []
   - name: Z / SETUP / Workshop deployment
     description: Workflow for workshop deployment
-    extra_vars:
-      lvm_snapshots_action: check
+    extra_vars: ''
     inventory: Workshop Inventory
     state: present
     organization: Default
@@ -138,10 +137,11 @@ controller_workflows:
         all_parents_must_converge: false
         type: inventory_source
         success_nodes: OS / Patch OS to latest
-      - identifier: OS / Patch OS to latest
+      - identifier: OS / Patch OS to latest - rhel7
         unified_job_template: OS / Patch OS to latest
         organization: Default
-        all_parents_must_converge: false
+        all_parents_must_converge: true
         type: inventory_source
-        success_nodes: []      
+        extra_data:
+          - rhel_inventory_group: "rhel7"
 ...
