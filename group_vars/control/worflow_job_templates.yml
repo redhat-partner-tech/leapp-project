@@ -109,7 +109,7 @@ controller_workflows:
         organization: Default
         all_parents_must_converge: false
         success_nodes:
-          - Patch OS to latest
+          - SETUP Miscellaneous host config
       - identifier: EC2 Dynamic Source - rhel7
         unified_job_template: EC2 Dynamic Source - rhel7
         organization: Default
@@ -134,15 +134,41 @@ controller_workflows:
       - identifier: EC2 Dynamic Source - ALL_rhel
         unified_job_template: EC2 Dynamic Source - ALL_rhel
         organization: Default
-        all_parents_must_converge: false
+        all_parents_must_converge: true
         type: inventory_source
         success_nodes:
-          - Patch OS to latest
-      - identifier: Patch OS to latest
+          - SETUP Miscellaneous host config
+      - identifier: SETUP Miscellaneous host config
+        unified_job_template: Z / SETUP / Miscellaneous host config
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        extra_data:
+          rhel_inventory_group: "ALL_rhel"
+        success_nodes:
+          - Patch OS to latest - rhel7
+          - Patch OS to latest - rhel8
+      - identifier: Patch OS to latest - rhel7
         unified_job_template: OS / Patch OS to latest
         organization: Default
-        all_parents_must_converge: true
+        all_parents_must_converge: false
         type: inventory_source
         extra_data:
           rhel_inventory_group: "rhel7"
+      - identifier: Patch OS to latest - rhel8
+        unified_job_template: OS / Patch OS to latest
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        extra_data:
+          rhel_inventory_group: "rhel8"
+        success_nodes:
+          - OS Remediation - rhel8
+      - identifier: OS Remediation - rhel8
+        unified_job_template: OS / Remediation
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        extra_data:
+          rhel_inventory_group: "rhel8"
 ...
