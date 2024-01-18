@@ -6,6 +6,11 @@
     delay: 5
     timeout: 300
 
+- name: Check for leapp utility
+  ansible.builtin.stat:
+    path: /usr/bin/leapp
+  register: leapp_utility_check
+
 - name: Configure firewalld
   ansible.builtin.lineinfile:
     path: "/etc/firewalld/firewalld.conf"
@@ -23,6 +28,7 @@
     leapp answer --section check_vdo.confirm=True
   args:
     executable: /bin/bash
+  when: leapp_utility_check.stat.exists
 
 - name: Configure sshd
   ansible.builtin.lineinfile:

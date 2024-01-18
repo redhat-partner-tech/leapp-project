@@ -96,4 +96,86 @@ controller_workflows:
         all_parents_must_converge: false
         type: inventory_source
         success_nodes: []
+  - name: Z / SETUP / Workshop deployment
+    description: Workflow for workshop deployment
+    inventory: Workshop Inventory
+    state: present
+    organization: Default
+    survey_enabled: false
+    simplified_workflow_nodes:
+      - identifier: Setup Cockpit Web Console
+        unified_job_template: Z / SETUP / Cockpit - Web Console
+        organization: Default
+        all_parents_must_converge: false
+        success_nodes:
+          - Extend partition and resize physical volume
+      - identifier: EC2 Dynamic Source - rhel7
+        unified_job_template: EC2 Dynamic Source - rhel7
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        success_nodes:
+          - EC2 Dynamic Source - rhel8
+      - identifier: EC2 Dynamic Source - rhel8
+        unified_job_template: EC2 Dynamic Source - rhel8
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        success_nodes:
+          - EC2 Dynamic Source - rhel9
+      - identifier: EC2 Dynamic Source - rhel9
+        unified_job_template: EC2 Dynamic Source - rhel9
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        success_nodes:
+          - EC2 Dynamic Source - ALL_rhel
+      - identifier: EC2 Dynamic Source - ALL_rhel
+        unified_job_template: EC2 Dynamic Source - ALL_rhel
+        organization: Default
+        all_parents_must_converge: true
+        type: inventory_source
+        success_nodes:
+          - Extend partition and resize physical volume
+      - identifier: Extend partition and resize physical volume
+        unified_job_template: UTILITY / Extend partition and resize physical volume
+        organization: Default
+        all_parents_must_converge: false
+        extra_data:
+          rhel_inventory_group: "ALL_rhel"
+        success_nodes:
+          - Setup miscellaneous host configuration
+      - identifier: Setup miscellaneous host configuration
+        unified_job_template: Z / SETUP / Miscellaneous host config
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        extra_data:
+          rhel_inventory_group: "ALL_rhel"
+        success_nodes:
+          - Patch OS to latest - rhel7
+          - Patch OS to latest - rhel8
+      - identifier: Patch OS to latest - rhel7
+        unified_job_template: OS / Patch OS to latest
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        extra_data:
+          rhel_inventory_group: "rhel7"
+      - identifier: Patch OS to latest - rhel8
+        unified_job_template: OS / Patch OS to latest
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        extra_data:
+          rhel_inventory_group: "rhel8"
+        success_nodes:
+          - OS Remediation - rhel8
+      - identifier: OS Remediation - rhel8
+        unified_job_template: OS / Remediation
+        organization: Default
+        all_parents_must_converge: false
+        type: inventory_source
+        extra_data:
+          rhel_inventory_group: "rhel8"
 ...
