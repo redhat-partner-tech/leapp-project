@@ -98,7 +98,6 @@ controller_workflows:
         success_nodes: []
   - name: Z / SETUP / Workshop deployment
     description: Workflow for workshop deployment
-    extra_vars: ''
     inventory: Workshop Inventory
     state: present
     organization: Default
