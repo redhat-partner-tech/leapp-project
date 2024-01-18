@@ -109,7 +109,7 @@ controller_workflows:
         organization: Default
         all_parents_must_converge: false
         success_nodes:
-          - Setup miscellaneous host configuration
+          - Extend partition and resize physical volume
       - identifier: EC2 Dynamic Source - rhel7
         unified_job_template: EC2 Dynamic Source - rhel7
         organization: Default
@@ -136,6 +136,14 @@ controller_workflows:
         organization: Default
         all_parents_must_converge: true
         type: inventory_source
+        success_nodes:
+          - Extend partition and resize physical volume
+      - identifier: Extend partition and resize physical volume
+        unified_job_template: UTILITY / Extend partition and resize physical volume
+        organization: Default
+        all_parents_must_converge: false
+        extra_data:
+          rhel_inventory_group: "ALL_rhel"
         success_nodes:
           - Setup miscellaneous host configuration
       - identifier: Setup miscellaneous host configuration
