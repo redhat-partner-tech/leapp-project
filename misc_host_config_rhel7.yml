@@ -14,8 +14,8 @@
     backup: true
   loop:
     - var: GRUB_SERIAL_COMMAND
-      value: "serial --speed=115200"
+      value: '\"serial --speed=115200\"'
     - var: GRUB_TERMINAL
-      value: "serial console"
+      value: '\"serial consol\"'
   notify: Rebuild grub.cfg
 ...
