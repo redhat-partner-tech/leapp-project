@@ -283,6 +283,28 @@ controller_templates:
     extra_vars:
       full_storage_device_name: /dev/nvme0n1
       perform_resize: true
+  - name: Z / SETUP / Miscellaneous host config
+    project: Project Leapp
+    playbook: misc_host_config.yml
+    inventory: Workshop Inventory
+    credentials:
+      - Workshop Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - ALL_rhel
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
+    extra_vars: ''
+    ask_limit_on_launch: true
   - name: Z / SETUP / Cockpit - Web Console
     description: Install and configure Cockpit Web Console for all nodes
     project: Project Leapp
