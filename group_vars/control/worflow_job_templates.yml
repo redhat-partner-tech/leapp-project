@@ -136,7 +136,8 @@ controller_workflows:
         organization: Default
         all_parents_must_converge: false
         type: inventory_source
-        success_nodes: node201
+        success_nodes:
+          - node201
       - identifier: node201
         unified_job_template: OS / Patch OS to latest
         organization: Default
