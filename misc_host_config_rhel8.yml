@@ -10,7 +10,6 @@
   ansible.builtin.copy:
     content: "{{ yum_system_releasever | default(8.8) }}"
     dest: "/etc/yum/vars/releasever"
-    state: present
     owner: root
     group: root
     mode: '0644'
