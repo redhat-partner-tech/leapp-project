@@ -20,6 +20,7 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
+    ask_limit_on_launch: true
   - name: AUTO / 01 Analysis
     project: Project Leapp
     playbook: analysis.yml
@@ -40,14 +41,11 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
-        - question_name: Enter server name - Leave blank to target all
-          type: text
-          variable: ripu_pet_name
-          required: false
     extra_vars:
       leapp_upgrade_type: rhui
       leapp_repos_enabled: []
     ask_variables_on_launch: true
+    ask_limit_on_launch: true
   - name: OS / Upgrade
     project: Project Leapp
     playbook: upgrade.yml
@@ -68,14 +66,11 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
-        - question_name: Enter server name - Leave blank to target all
-          type: text
-          variable: ripu_pet_name
-          required: false
     extra_vars:
       leapp_upgrade_type: rhui
       leapp_repos_enabled: []
     ask_variables_on_launch: true
+    ask_limit_on_launch: true
   - name: OS / Remediation
     project: Project Leapp
     playbook: remediate.yml
@@ -96,10 +91,7 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
-        - question_name: Enter server name - Leave blank to target all
-          type: text
-          variable: ripu_pet_name
-          required: false
+    ask_limit_on_launch: true
   - name: PETS / App Install
     project: Project Leapp
     playbook: pet_clinic.yml
@@ -120,17 +112,31 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
-        - question_name: Enter server name - Leave blank to target all
-          type: text
-          variable: ripu_pet_name
-          required: false
+    ask_limit_on_launch: true
   - name: UTILITY / Snapshot Instance
     project: Project Leapp
-    playbook: snapshot_instance.yml
+    playbook: snapshot_instance_lvm.yml
     inventory: Workshop Inventory
-    limit: ansible-1
     credentials:
       - Workshop Credential
+    extra_vars:
+      snapshot_set_name: ripu01
+      snapshot_create_snapshot_autoextend_threshold: 70
+      snapshot_create_snapshot_autoextend_percent: 20
+      snapshot_create_boot_backup: true
+      snapshot_create_volumes:
+        - vg: VolGroup00
+          lv: rootVol
+          size: 3G
+        - vg: VolGroup00
+          lv: varVol
+          size: 5G
+        - vg: VolGroup00
+          lv: logVol
+          size: 500M
+        - vg: VolGroup00
+          lv: auditVol
+          size: 100M
     survey_enabled: true
     survey:
       name: ''
@@ -145,59 +151,27 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
-        - question_name: Enter server name - Leave blank to target all
-          type: text
-          variable: ripu_pet_name
-          required: false
-    extra_vars:
-      snapshot: aws
-      ec2_stop_instance_for_snapshot: false
-      ec2_region: "{{ workshop_ec2_region }}"
-      instances_template:
-        tags:
-          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
-          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          operating_system: rhel
-  - name: UTILITY / Snapshot Delete
-    project: Project Leapp
-    playbook: snapshot_delete.yml
-    inventory: Workshop Inventory
-    limit: ansible-1
-    credentials:
-      - Workshop Credential
-    survey_enabled: true
-    survey:
-      name: ''
-      description: ''
-      spec:
-        - question_name: Select inventory group
+        - question_name: Snapshot action
           type: multiplechoice
-          variable: rhel_inventory_group
+          variable: lvm_snapshots_action
           choices:
-            - ALL_rhel
-            - rhel7
-            - rhel8
-            - rhel9
+            - check
+            - create
+            - revert
+            - remove
           required: true
-        - question_name: Enter server name - Leave blank to target all
-          type: text
-          variable: ripu_pet_name
-          required: false
-    extra_vars:
-      snapshot: aws
-      ec2_region: "{{ workshop_ec2_region }}"
-      instances_template:
-        tags:
-          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
-          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          operating_system: rhel
+    ask_variables_on_launch: true
+    ask_limit_on_launch: true
   - name: AUTO / 03 Rollback
     project: Project Leapp
-    playbook: rollback.yml
+    playbook: snapshot_instance_lvm.yml
     inventory: Workshop Inventory
-    limit: ansible-1
     credentials:
       - Workshop Credential
+    extra_vars:
+      snapshot_set_name: ripu01
+      snapshot_create_boot_backup: true
+      lvm_snapshots_action: revert
     survey_enabled: true
     survey:
       name: ''
@@ -212,19 +186,8 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
-        - question_name: Enter server name - Leave blank to target all
-          type: text
-          variable: ripu_pet_name
-          required: false
-    extra_vars:
-      snapshot: aws
-      delete_prior_volume: true
-      ec2_region: "{{ workshop_ec2_region }}"
-      instances_template:
-        tags:
-          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
-          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          operating_system: rhel
+    ask_variables_on_launch: true
+    ask_limit_on_launch: true
   - name: UTILITY / Instance Details
     project: Project Leapp
     playbook: instance_details.yml
@@ -238,20 +201,6 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
-  - name: UTILITY / Snapshot Details
-    project: Project Leapp
-    playbook: snapshot_details.yml
-    inventory: Workshop Inventory
-    credentials:
-      - Workshop Credential
-    extra_vars:
-      snapshot: aws
-      ec2_region: "{{ workshop_ec2_region }}"
-      snapshots:
-        tags:
-          guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
-          Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
-          Environment: leapp
   - name: UTILITY / Update inventories via dynamic sources
     project: Project Leapp
     playbook: inventory_source_update.yml
@@ -280,12 +229,11 @@ controller_templates:
     credentials:
       - Workshop Credential
     extra_vars:
-      _hosts: all
+      rhel_inventory_group: all
   - name: UTILITY / Set instance tags
     project: Project Leapp
     playbook: set_instance_tags.yml
     inventory: Workshop Inventory
-    limit: ansible-1
     credentials:
       - Workshop Credential
     survey_enabled: true
@@ -302,10 +250,6 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
-        - question_name: Enter server name - Leave blank to target all
-          type: text
-          variable: ripu_pet_name
-          required: false
     extra_vars:
       ec2_region: "{{ workshop_ec2_region }}"
       instances_template:
@@ -313,4 +257,69 @@ controller_templates:
           guid: "{{ lookup('env', 'AWX_HOST').split('.')[1] }}"
           Student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
           operating_system: rhel
+    ask_limit_on_launch: true
+  - name: UTILITY / Extend partition and resize physical volume
+    project: Project Leapp
+    playbook: partition_lvm_resize.yml
+    inventory: Workshop Inventory
+    credentials:
+      - Workshop Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - ALL_rhel
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
+    ask_limit_on_launch: true
+    ask_variables_on_launch: true
+    extra_vars:
+      full_storage_device_name: /dev/nvme0n1
+      perform_resize: true
+  - name: Z / SETUP / Miscellaneous host config
+    project: Project Leapp
+    playbook: misc_host_config.yml
+    inventory: Workshop Inventory
+    credentials:
+      - Workshop Credential
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Select inventory group
+          type: multiplechoice
+          variable: rhel_inventory_group
+          choices:
+            - ALL_rhel
+            - rhel7
+            - rhel8
+            - rhel9
+          required: true
+    extra_vars: ''
+    ask_limit_on_launch: true
+  - name: Z / SETUP / Cockpit - Web Console
+    description: Install and configure Cockpit Web Console for all nodes
+    project: Project Leapp
+    playbook: controller_cockpit_setup.yml
+    inventory: Workshop Inventory
+    credentials:
+      - Workshop Credential
+    extra_vars:
+      ec2_region: "{{ workshop_ec2_region }}"
+      instances:
+        tags:
+          Workshop: "{{ lookup('env', 'AWX_HOST' ).split('.')[1] }}"
+      student: "{{ lookup('env', 'AWX_HOST').split('.')[0] | urlsplit('hostname') }}"
+      workshop_dns_zone: "{{ lookup('env', 'AWX_HOST').split('.',2)[2] }}"
+
+  - name: Demo Job Template
+    state: absent
 ...

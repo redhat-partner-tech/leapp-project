@@ -1,0 +1,51 @@
+---
+- name: Set the latest kernel as default
+  hosts: "{{ rhel_inventory_group | default(omit) }}"
+  # gather_facts: true
+  gather_facts: false
+  become: true
+  strategy: free
+  tasks:
+    - name: Wait for connection...and gather facts
+      ansible.builtin.setup:
+        gather_timeout: 60
+      register: setup_result
+      ignore_errors: true
+      until: "setup_result is not failed"
+      retries: 10
+      delay: 10
+
+    - name: Capture path of the latest kernel vmlinuz
+      ansible.builtin.shell:
+        cmd: >-
+          set -o pipefail;
+          ls -1 /boot/vmlinuz-* |
+          tail -1
+      register: latest_vmlinuz
+      changed_when: false
+      failed_when:
+        - latest_vmlinuz.rc != 0
+        - latest_vmlinuz.stderr != ""
+
+    - name: Set latest kernel as default via grubby
+      ansible.builtin.shell:
+        cmd: >-
+          set -o pipefail;
+          grubby --set-default="{{ latest_vmlinuz.stdout }}"
+      register: set_grubby_default
+      changed_when: false
+      failed_when:
+        - set_grubby_default.rc != 0
+        - set_grubby_default.stderr != ""
+
+    - name: Reboot node
+      ansible.builtin.reboot:
+      register: reboot_result
+
+    - name: Wait for connection...
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
+        timeout: 300
+...

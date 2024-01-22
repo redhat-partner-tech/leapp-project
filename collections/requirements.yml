@@ -10,12 +10,15 @@ collections:
   version: ">=6.4.0" # Version range identifiers (default: ``*``)
   source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
 - name: infra.controller_configuration
-  version: "2.3.1" # Version range identifiers (default: ``*``)
+  version: "2.4.1" # Version range identifiers (default: ``*``)
   source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
-- name: git+https://github.com/redhat-cop/infra.leapp.git
-  version: "1.1.0" # Version range identifiers (default: ``*``)
-  source: git
+- name: infra.leapp
+  version: "1.1.4" # Version range identifiers (default: ``*``)
+  source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
 - name: https://github.com/heatmiser/ansible-snapshot.git
   type: git
   version: main
+- name: infra.lvm_snapshots
+  version: "2.0.1" # Version range identifiers (default: ``*``)
+  source: https://galaxy.ansible.com # The Galaxy URL to pull the collection from (default: ``--api-server`` from cmdline)
 ...
