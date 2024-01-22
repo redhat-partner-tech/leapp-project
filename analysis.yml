@@ -45,4 +45,10 @@
         - "'rhui' in yum_repolist.stdout"
   roles:
     - infra.leapp.analysis
+  tasks:
+    - name: Confirm check_vdo True in leapp answerfile
+      ansible.builtin.replace:
+        path: /var/log/leapp/answerfile
+        regexp: '(\[check_vdo\][^<]*)\#\ confirm\ \='
+        replace: '\1confirm\ \=\ True'
 ...
