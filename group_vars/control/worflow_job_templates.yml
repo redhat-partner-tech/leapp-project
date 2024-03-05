@@ -143,7 +143,7 @@ controller_workflows:
         all_parents_must_converge: false
         extra_data:
           rhel_inventory_group: "ALL_rhel"
-        success_nodes:
+        always_nodes:
           - Setup miscellaneous host configuration
       - identifier: Setup miscellaneous host configuration
         unified_job_template: Z / SETUP / Miscellaneous host config
