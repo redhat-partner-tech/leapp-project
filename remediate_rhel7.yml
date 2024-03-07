@@ -6,6 +6,12 @@
     delay: 5
     timeout: 300
 
+- name: Install leapp
+  ansible.builtin.package:
+    name: leapp
+    enablerepo: rhel-7-server-rhui-extras-rpms
+    state: latest
+
 - name: Define kernel modules to unload
   ansible.builtin.set_fact:
     kernel_modules_to_unload:
@@ -21,7 +27,7 @@
 - name: Remove pam_pkcs11 module # noqa command-instead-of-module
   ansible.builtin.shell: |
     set -o pipefail
-    leapp answer --section remove_pam_pkcs11_module_check.confirm=True
+    leapp answer --add --section remove_pam_pkcs11_module_check.confirm=True
   args:
     executable: /bin/bash
 
