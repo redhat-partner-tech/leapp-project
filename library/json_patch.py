@@ -250,7 +250,7 @@ class PatchManager(object):
         if result['changed']:  # let's write the changes
             dump_kwargs = {}
             if self.pretty_print:
-                dump_kwargs.update({'indent': 4, 'separators': (',', ': ')})
+                dump_kwargs.update({'indent': 2, 'separators': (', ', ': ')})
 
             result['diff'] = dict(
                 before=self.json_doc,
@@ -273,7 +273,7 @@ class PatchManager(object):
 
         dump_kwargs = {}
         if self.pretty_print:
-            dump_kwargs.update({'indent': 4, 'separators': (',', ': ')})
+            dump_kwargs.update({'indent': 2, 'separators': (', ', ': ')})
 
         if self.do_backup:  # backup first if needed
             result.update(self.backup())

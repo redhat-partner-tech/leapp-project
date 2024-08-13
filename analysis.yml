@@ -72,6 +72,7 @@
         - name: Add inhibitor flags
           json_patch:
             src: /var/log/leapp/leapp-report.json
+            pretty: true
             operations:
               - op: add
                 path: "/entries/{{ ansible_loop.index0 }}/flags"
