@@ -280,7 +280,7 @@ class PatchManager(object):
 
         _, tmpfile = tempfile.mkstemp()
         with open(tmpfile, "w") as f:
-            f.write(json.dumps(self.patcher.obj, **dump_kwargs))
+            f.write("%s%s" % (json.dumps(self.patcher.obj, **dump_kwargs), "\n"))
 
         self.module.atomic_move(tmpfile,
                                 to_native(os.path.realpath(to_bytes(self.outfile, errors='surrogate_or_strict')), errors='surrogate_or_strict'),
