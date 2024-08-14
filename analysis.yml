@@ -57,7 +57,7 @@
         path: /var/log/leapp/leapp-report.json
       register: report_file
 
-    - name: Add flags to report for backward schema compatibility
+    - name: Add flags and tags to report for backward schema compatibility
       when: report_file.stat.exists
       block:
         - name: Collect JSON report results
@@ -69,18 +69,18 @@
           ansible.builtin.set_fact:
             leapp_report_json: "{{ leapp_report.content | b64decode | from_json }}"
 
-        - name: Add inhibitor flags
+        - name: Add flags and tags
           json_patch:
             src: /var/log/leapp/leapp-report.json
             pretty: true
             operations:
               - op: add
                 path: "/entries/{{ ansible_loop.index0 }}/flags"
-                value:
-                  - inhibitor
-          when:
-            - ('error' in item.groups | default([], true)) or
-              ('inhibitor' in item.groups | default([], true))
+                value: "{{ item.groups | intersect(['inhibitor', 'error']) }}"
+              - op: add
+                path: "/entries/{{ ansible_loop.index0 }}/tags"
+                value: "{{ item.groups | difference(['inhibitor', 'error']) }}"
+          when: item.groups is defined
           loop: "{{ leapp_report_json.entries }}"
           loop_control:
             extended: true
