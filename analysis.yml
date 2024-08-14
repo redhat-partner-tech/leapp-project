@@ -76,10 +76,10 @@
             operations:
               - op: add
                 path: "/entries/{{ ansible_loop.index0 }}/flags"
-                value: "{{ item.groups | intersect(['inhibitor', 'error']) }}"
+                value: "{{ item.groups | intersect(['inhibitor']) }}"
               - op: add
                 path: "/entries/{{ ansible_loop.index0 }}/tags"
-                value: "{{ item.groups | difference(['inhibitor', 'error']) }}"
+                value: "{{ item.groups | difference(['inhibitor']) }}"
           when: item.groups is defined
           loop: "{{ leapp_report_json.entries }}"
           loop_control:
