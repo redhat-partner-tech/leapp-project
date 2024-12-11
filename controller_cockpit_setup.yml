@@ -137,9 +137,7 @@
         name:
           - cockpit
           - cockpit-system
-          - cockpit-leapp
         state: latest
-        enablerepo: leapp-supplements
 
     - name: Enable and start cockpit console service
       ansible.builtin.service:
