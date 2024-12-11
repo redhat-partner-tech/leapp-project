@@ -27,6 +27,7 @@ controller_templates:
           variable: release_version
           required: false
     ask_limit_on_launch: true
+    allow_simultaneous: true
   - name: AUTO / 01 Analysis
     project: Project Leapp
     playbook: analysis.yml
