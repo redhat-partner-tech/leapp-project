@@ -24,9 +24,13 @@
               ignore_errors: true
               when: ansible_system_vendor == "Amazon EC2" or ansible_system_vendor == "Xen"
 
-            - name: Assemble payload for Splunk
-              ansible.builtin.set_fact:
-                splunk_payload:
+            - name: Send event to Splunk
+              ansible.builtin.uri:
+                url: "{{ splunk_url }}"
+                headers:
+                  Authorization: "Splunk {{ splunk_hectoken }}"
+                method: POST
+                body:
                   sourcetype: _json
                   index: "{{ splunk_index }}"
                   event:
@@ -39,14 +43,6 @@
                     region: "{{ ansible_ec2_placement_region | default('undefined') }}"
                     play_name: "{{ ansible_play_name }}"
                     success: "{{ leapp_upgrade_success | default(false) }}"
-
-            - name: Send event to Splunk
-              ansible.builtin.uri:
-                url: "{{ splunk_url }}"
-                headers:
-                  Authorization: "Splunk {{ splunk_hectoken }}"
-                method: POST
-                body: "{{ splunk_payload }}"
                 body_format: json
                 return_content: true
               delegate_to: localhost
