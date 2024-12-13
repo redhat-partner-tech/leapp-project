@@ -22,7 +22,12 @@ controller_templates:
             - rhel8
             - rhel9
           required: true
+        - question_name: Target OS release version
+          type: text
+          variable: release_version
+          required: false
     ask_limit_on_launch: true
+    allow_simultaneous: true
   - name: AUTO / 01 Analysis
     project: Project Leapp
     playbook: analysis.yml

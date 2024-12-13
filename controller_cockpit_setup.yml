@@ -124,12 +124,20 @@
   become: true
   gather_facts: false
   tasks:
+    - name: Leapp custom actor repository
+      ansible.builtin.yum_repository:
+        name: leapp-supplements
+        description: Leapp custom actors for workshop demo
+        baseurl: https://people.redhat.com/bmader/leapp-supplements-demo/RHEL/$releasever/$basearch
+        gpgcheck: false
+        enabled: false
+
     - name: Install Cockpit
-      ansible.builtin.package:
+      ansible.builtin.yum:
         name:
           - cockpit
           - cockpit-system
-        state: present
+        state: latest
 
     - name: Enable and start cockpit console service
       ansible.builtin.service:
@@ -158,14 +166,6 @@
             name: atd.service
             enabled: true
             state: started
-
-        - name: Leapp custom actor repository
-          ansible.builtin.yum_repository:
-            name: leapp-supplements
-            description: Leapp custom actors for workshop demo
-            baseurl: https://people.redhat.com/bmader/leapp-supplements-demo/RHEL/$releasever/$basearch
-            gpgcheck: false
-            enabled: false
 
         - name: Set PasswordAuthentication no in sshd_config
           ansible.builtin.lineinfile:

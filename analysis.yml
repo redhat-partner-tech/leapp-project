@@ -72,9 +72,13 @@
             src: /var/log/leapp/leapp-report.json
           register: leapp_report
 
-        - name: Assemble payload for Splunk
-          ansible.builtin.set_fact:
-            splunk_payload:
+        - name: Send event to Splunk
+          ansible.builtin.uri:
+            url: "{{ splunk_url }}"
+            headers:
+              Authorization: "Splunk {{ splunk_hectoken }}"
+            method: POST
+            body:
               sourcetype: _json
               index: "{{ splunk_index }}"
               event:
@@ -86,14 +90,6 @@
                 pet_app_team: "{{ ['Bird','Cat','Dog','Fish','Hamster','Lizard','Snake'] | random(seed=ansible_facts.hostname) }}"
                 region: "{{ ansible_ec2_placement_region | default('undefined') }}"
                 report: "{{ leapp_report.content | b64decode | from_json }}"
-
-        - name: Send event to Splunk
-          ansible.builtin.uri:
-            url: "{{ splunk_url }}"
-            headers:
-              Authorization: "Splunk {{ splunk_hectoken }}"
-            method: POST
-            body: "{{ splunk_payload }}"
             body_format: json
             return_content: true
           delegate_to: localhost

@@ -21,17 +21,28 @@
       retries: 10
       delay: 10
 
-    - name: Upgrade RHEL 7 OS to latest packages available
+    - name: Update RHEL 7 OS to latest packages available
       ansible.builtin.yum:
         name: '*'
         state: latest
       when: ansible_distribution_major_version | int == 7
 
-    - name: Upgrade RHEL 8/9 OS to latest packages available
-      ansible.builtin.dnf:
-        name: '*'
-        state: latest
+    - name: Update RHEL 8/9 OS to latest packages available
       when: ansible_distribution_major_version | int >= 8
+      block:
+        - name: Update current release version
+          when: release_version is defined
+          ansible.builtin.template:
+            src: rhel/yum/releasever.j2
+            dest: /etc/yum/vars/releasever
+            owner: root
+            group: root
+            mode: '0644'
+
+        - name: Update to latest packages
+          ansible.builtin.dnf:
+            name: '*'
+            state: latest
 
     - name: Reboot node
       ansible.builtin.reboot:

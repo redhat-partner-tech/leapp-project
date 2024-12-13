@@ -215,7 +215,6 @@ controller_workflows:
         unified_job_template: Z / SETUP / Miscellaneous host config
         organization: Default
         all_parents_must_converge: false
-        type: inventory_source
         extra_data:
           rhel_inventory_group: "ALL_rhel"
         success_nodes:
@@ -225,23 +224,21 @@ controller_workflows:
         unified_job_template: OS / Patch OS to latest
         organization: Default
         all_parents_must_converge: false
-        type: inventory_source
         extra_data:
           rhel_inventory_group: "rhel7"
       - identifier: Patch OS to latest - rhel8
         unified_job_template: OS / Patch OS to latest
         organization: Default
         all_parents_must_converge: false
-        type: inventory_source
         extra_data:
           rhel_inventory_group: "rhel8"
+          release_version: "8.10"
         success_nodes:
           - OS Remediation - rhel8
       - identifier: OS Remediation - rhel8
         unified_job_template: OS / Remediation
         organization: Default
         all_parents_must_converge: false
-        type: inventory_source
         extra_data:
           rhel_inventory_group: "rhel8"
 ...
