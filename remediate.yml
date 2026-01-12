@@ -12,6 +12,9 @@
     - name: "Remediate rhel8 systems"
       when: ansible_distribution_major_version|int == 8
       ansible.builtin.import_tasks: remediate_rhel8.yml
+    - name: "Remediate rhel9 systems"
+      when: ansible_distribution_major_version|int == 9
+      ansible.builtin.import_tasks: remediate_rhel9.yml
 
   handlers:
     - name: "Restart sshd"
