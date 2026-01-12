@@ -15,7 +15,7 @@
       register: yum_repolist
       changed_when: yum_repolist.rc != 0
 
-    # Determine if node is an EC2 Marketplace instance utilzing RHUI
+    # Determine if node is an EC2 Marketplace instance utilizing RHUI
     - name: Set fact for RHUI RHEL extras repo name when EC2 and utilizing RHUI
       ansible.builtin.set_fact:
         analysis_repos_el7: "rhel-7-server-rhui-extras-rpms"
